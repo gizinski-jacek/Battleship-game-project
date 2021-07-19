@@ -1,0 +1,23 @@
+{
+  "name": "battleship-game-project",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/gizinski-jacek/Battleship-game-project.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/gizinski-jacek/Battleship-game-project/issues"
+  },
+  "homepage": "https://github.com/gizinski-jacek/Battleship-game-project#readme",
+  "devDependencies": {
+    "eslint": "^7.31.0",
+    "prettier": "2.3.2"
+  }
+}
