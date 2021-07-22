@@ -1,27 +1,31 @@
 class Ship {
 	constructor(ship, arr) {
-		this.name = ship.name;
-		this.size = ship.size;
-		this.hits = [];
-		this.cellsOccupied = arr;
+		this._name = ship.name;
+		this._size = ship.size;
+		this._hits = [];
+		this._cellsOccupied = arr;
 	}
 
 	isSunk() {
-		return JSON.stringify(this.hits) === JSON.stringify(this.cellsOccupied);
+		return (
+			JSON.stringify(this._hits) === JSON.stringify(this._cellsOccupied)
+		);
 	}
 
 	getShot(cell) {
-		this.hits.push(cell);
+		this._hits.push(cell);
 	}
 
 	get getSize() {
-		return this.size;
+		return this._size;
 	}
+
 	get getHits() {
-		return this.hits;
+		return this._hits;
 	}
+
 	get getCellsOccupied() {
-		return this.cellsOccupied;
+		return this._cellsOccupied;
 	}
 }
 
