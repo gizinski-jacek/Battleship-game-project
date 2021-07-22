@@ -8,7 +8,7 @@ describe('Gameboard Factory functions', () => {
 		board.placeShip('shipM', 'hor', 2);
 	});
 
-	test('Setters return correct values', () => {
+	test('Getters return correct values', () => {
 		expect(board.getOccupiedCells).toEqual([2, 3, 4]);
 		expect(board.getMissedShotsCells).toEqual([]);
 		expect(board.getShipList).toEqual([
