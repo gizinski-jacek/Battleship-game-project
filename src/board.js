@@ -21,50 +21,47 @@ const shipTemplate = {
 
 class Gameboard {
 	constructor() {
-		this.occupiedCells = [];
-		this.missedShotsCells = [];
-		this.shipList = [];
+		this._occupiedCells = [];
+		this._missedShotsCells = [];
+		this._shipList = [];
 	}
 
 	placeShip(shipID, direction, cell) {
-		// Add create ship here somehow and add the coords to it
-		// Maybe add it to some array of objects containing existing ships
-		// To find it then with fn receiveShot() and mark as shot
 		let arr = [];
 		for (let i = 0; i < shipTemplate[shipID].size; i++) {
 			if (direction === 'hor') {
-				this.occupiedCells.push(cell + i);
+				this._occupiedCells.push(cell + i);
 				arr.push(cell + i);
 			} else if (direction === 'ver') {
-				this.occupiedCells.push(cell + i * 10);
+				this._occupiedCells.push(cell + i * 10);
 				arr.push(cell + i * 10);
 			}
 		}
 		let newShip = new Ship(shipTemplate[shipID], arr);
-		this.shipList.push(newShip);
+		this._shipList.push(newShip);
 	}
 
 	receiveShot(cell) {
-		if (this.occupiedCells.includes(cell)) {
-			let foundShips = this.shipList.filter((ship) =>
+		if (this._occupiedCells.includes(cell)) {
+			let foundShips = this._shipList.filter((ship) =>
 				ship.getCellsOccupied.includes(cell)
 			);
 			foundShips[0].getShot(cell);
 		} else {
-			this.missedShotsCells.push(cell);
+			this._missedShotsCells.push(cell);
 		}
 	}
 
 	get getOccupiedCells() {
-		return this.occupiedCells;
+		return this._occupiedCells;
 	}
 
 	get getMissedShotsCells() {
-		return this.missedShotsCells;
+		return this._missedShotsCells;
 	}
 
 	get getShipList() {
-		return this.shipList;
+		return this._shipList;
 	}
 }
 
