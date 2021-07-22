@@ -4,10 +4,10 @@ describe('Ship Factory functions', () => {
 	let ship1;
 	test('Creates ship correctly', () => {
 		expect((ship1 = new Ship({ name: 'S', size: 2 }, [2, 3]))).toEqual({
-			name: 'S',
-			size: 2,
-			hits: [],
-			cellsOccupied: [2, 3],
+			_name: 'S',
+			_size: 2,
+			_hits: [],
+			_cellsOccupied: [2, 3],
 		});
 	});
 
