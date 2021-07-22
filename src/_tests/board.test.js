@@ -16,7 +16,7 @@ describe('Gameboard Factory functions', () => {
 		expect(board.occupiedCells).toEqual([2, 3, 4, 21, 31]);
 	});
 
-	test('Registers missed chots', () => {
+	test('Registers missed shots', () => {
 		board.receiveShot(5);
 		expect(board.missedShotsCells).toEqual([5]);
 	});
