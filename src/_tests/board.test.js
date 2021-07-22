@@ -34,4 +34,14 @@ describe('Gameboard Factory functions', () => {
 		board.receiveShot(5);
 		expect(board.getMissedShotsCells).toEqual([5]);
 	});
+
+	test('Check whether all ships are sunk', () => {
+		board.placeShip('shipS', 'ver', 21);
+		board.receiveShot(2);
+		board.receiveShot(3);
+		board.receiveShot(4);
+		board.receiveShot(21);
+		board.receiveShot(31);
+		expect(board.checkSunkenShips()).toEqual(true);
+	});
 });
