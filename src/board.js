@@ -19,12 +19,11 @@ const shipTemplate = {
 	},
 };
 
-const shipList = [];
-
 class Gameboard {
 	constructor() {
 		this.occupiedCells = [];
 		this.missedShotsCells = [];
+		this.shipList = [];
 	}
 
 	placeShip(shipID, direction, cell) {
@@ -42,13 +41,13 @@ class Gameboard {
 			}
 		}
 		let newShip = new Ship(shipTemplate[shipID], arr);
-		shipList.push(newShip);
+		this.shipList.push(newShip);
 	}
 
 	receiveShot(cell) {
 		if (this.occupiedCells.includes(cell)) {
-			let foundShips = shipList.filter((ship) =>
-				ship.getCells.includes(cell)
+			let foundShips = this.shipList.filter((ship) =>
+				ship.getCellsOccupied.includes(cell)
 			);
 			foundShips[0].getShot(cell);
 		} else {
