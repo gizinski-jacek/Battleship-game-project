@@ -13,10 +13,10 @@ describe('Gameboard Factory functions', () => {
 		expect(board.getMissedShotsCells).toEqual([]);
 		expect(board.getShipList).toEqual([
 			{
-				name: 'M',
-				size: 3,
-				hits: [],
-				cellsOccupied: [2, 3, 4],
+				_name: 'M',
+				_size: 3,
+				_hits: [],
+				_cellsOccupied: [2, 3, 4],
 			},
 		]);
 	});
