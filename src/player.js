@@ -17,7 +17,7 @@ class Player {
 	takeRandomShot() {
 		let random = null;
 		while (random === null || this._shotCells.includes(random)) {
-			random = Math.floor(Math.random() * 25);
+			random = Math.floor(Math.random() * 100);
 		}
 		return random;
 	}
