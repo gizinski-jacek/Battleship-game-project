@@ -54,6 +54,18 @@ class Gameboard {
 			this.missedShotsCells.push(cell);
 		}
 	}
+
+	get getOccupiedCells() {
+		return this.occupiedCells;
+	}
+
+	get getMissedShotsCells() {
+		return this.missedShotsCells;
+	}
+
+	get getShipList() {
+		return this.shipList;
+	}
 }
 
 module.exports = Gameboard;
