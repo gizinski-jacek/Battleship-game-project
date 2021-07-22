@@ -52,6 +52,15 @@ class Gameboard {
 		}
 	}
 
+	checkSunkenShips() {
+		let arr = [];
+		this._shipList.forEach((ship) => {
+			arr.push(ship.isSunk());
+		});
+		let result = arr.every((x) => x == true);
+		return result;
+	}
+
 	get getOccupiedCells() {
 		return this._occupiedCells;
 	}
