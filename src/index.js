@@ -25,7 +25,7 @@ function setUpGame() {
 	computerBoard.placeShip('shipS', 'ver', 58);
 
 	renderGame(humanBoard.getOccupiedCells, computerBoard.getOccupiedCells);
-	listenForMoves();
+	humanTurn();
 }
 
 function renderGame(cellsPlayer, cellsComp) {
@@ -52,7 +52,7 @@ function renderGame(cellsPlayer, cellsComp) {
 	}
 }
 
-function listenForMoves() {
+function humanTurn() {
 	const cells = document.querySelectorAll('.cellComp');
 	cells.forEach((cell) => {
 		cell.addEventListener('click', function click(e) {
@@ -62,13 +62,13 @@ function listenForMoves() {
 			if (computerBoard.checkSunkenShips()) {
 				alert('You have won!');
 			} else {
-				computerMove();
+				computerTurn();
 			}
 		});
 	});
 }
 
-function computerMove() {
+function computerTurn() {
 	const cells = document.querySelectorAll('.cellPlayer');
 	let computerShot = computerPlayer.takeShot(boardSize);
 	humanBoard.receiveShot(computerShot);
