@@ -1,0 +1,35 @@
+body {
+	height: 100vh;
+}
+
+.main {
+	height: 100%;
+	display: flex;
+	justify-content: space-around;
+	align-items: center;
+	flex-direction: row;
+}
+
+.board {
+	display: grid;
+	grid-template-columns: repeat(10, auto);
+	padding: 20px;
+}
+
+.cellPlayer,
+.cellComp {
+	padding: 20px;
+	border: 1px solid black;
+}
+
+.ship {
+	background-color: cyan;
+}
+
+.shot {
+	background-color: rgb(150, 150, 150);
+}
+
+.ship.shot {
+	background-color: red;
+}
