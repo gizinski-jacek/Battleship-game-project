@@ -19,10 +19,10 @@ function setUpGame() {
 
 	computerBoard = new Board();
 	computerPlayer = new Player('EasyAI', true, false);
-	computerBoard.placeShip('shipX', 'hor', 2);
-	computerBoard.placeShip('shipL', 'hor', 22);
-	computerBoard.placeShip('shipM', 'ver', 52);
-	computerBoard.placeShip('shipS', 'ver', 58);
+	computerBoard.placeShip('shipX', 'hor', randomNumber());
+	computerBoard.placeShip('shipL', 'hor', randomNumber());
+	computerBoard.placeShip('shipM', 'ver', randomNumber());
+	computerBoard.placeShip('shipS', 'ver', randomNumber());
 
 	renderGame(humanBoard.getOccupiedCells, computerBoard.getOccupiedCells);
 	humanTurn();
@@ -76,6 +76,11 @@ function computerTurn() {
 	if (humanBoard.checkSunkenShips()) {
 		alert('You have lost!');
 	}
+}
+
+function randomNumber() {
+	let random;
+	return (random = Math.floor(Math.random() * boardSize));
 }
 
 setUpGame();
