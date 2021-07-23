@@ -55,11 +55,12 @@ function renderGame(cellsPlayer, cellsComp) {
 function listenForMoves() {
 	const cells = document.querySelectorAll('.cellComp');
 	cells.forEach((cell) => {
-		cell.addEventListener('click', (e) => {
+		cell.addEventListener('click', function click(e) {
 			e.currentTarget.classList.add('shot');
+			e.currentTarget.removeEventListener('click', click);
 			computerBoard.receiveShot(Number(e.currentTarget.id.split('_')[1]));
 			if (computerBoard.checkSunkenShips()) {
-				alert('Win');
+				alert('You have won!');
 			} else {
 				computerMove();
 			}
@@ -68,13 +69,12 @@ function listenForMoves() {
 }
 
 function computerMove() {
+	const cells = document.querySelectorAll('.cellPlayer');
 	let computerShot = computerPlayer.takeShot(boardSize);
 	humanBoard.receiveShot(computerShot);
-	document
-		.querySelectorAll('.cellPlayer')
-		[computerShot].classList.add('shot');
+	cells[computerShot].classList.add('shot');
 	if (humanBoard.checkSunkenShips()) {
-		alert('Game Over');
+		alert('You have lost!');
 	}
 }
 
