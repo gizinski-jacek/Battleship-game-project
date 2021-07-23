@@ -13,13 +13,21 @@ body {
 .board {
 	display: grid;
 	grid-template-columns: repeat(10, auto);
-	padding: 20px;
+	margin: 20px;
+	border: 2px solid black;
+	box-sizing: border-box;
 }
 
 .cellPlayer,
 .cellComp {
 	padding: 20px;
 	border: 1px solid black;
+	cursor: crosshair;
+	user-select: none;
+}
+
+.cellPlayer {
+	pointer-events: none;
 }
 
 .ship {
@@ -28,6 +36,7 @@ body {
 
 .shot {
 	background-color: rgb(150, 150, 150);
+	pointer-events: none;
 }
 
 .ship.shot {
