@@ -13,7 +13,6 @@ describe('Player Factory functions', () => {
 		expect(player).toEqual({
 			_name: 'Mark',
 			_isAI: false,
-			_myTurn: false,
 			_shotCells: [],
 		});
 	});
@@ -22,7 +21,6 @@ describe('Player Factory functions', () => {
 		expect(computer).toEqual({
 			_name: 'AI',
 			_isAI: true,
-			_myTurn: false,
 			_shotCells: [],
 		});
 	});
@@ -30,12 +28,6 @@ describe('Player Factory functions', () => {
 	test('Getters return correct values', () => {
 		expect(player.getName).toEqual('Mark');
 		expect(player.getShotCells).toEqual([]);
-		expect(player.getMyTurn).toEqual(false);
-	});
-
-	test('Changes players turn correctly', () => {
-		player.changeTurn();
-		expect(player.getMyTurn).toEqual(true);
 	});
 
 	test('Registers taken shots', () => {
@@ -45,7 +37,7 @@ describe('Player Factory functions', () => {
 
 	test('Testing random AI shot by forcing the random value to be 20% of board size (100cells)', () => {
 		jest.spyOn(global.Math, 'random').mockReturnValue(0.25);
-		computer.takeShot();
+		computer.takeShot(100);
 		expect(computer.getShotCells).toEqual([25]);
 		jest.spyOn(global.Math, 'random').mockRestore();
 	});
