@@ -20,13 +20,17 @@ const shipTemplate = {
 };
 
 class Gameboard {
-	constructor() {
+	constructor(isAIBoard = false) {
 		this._occupiedCells = [];
 		this._missedShotsCells = [];
 		this._shipList = [];
+		this._isAIBoard = isAIBoard;
 	}
 
 	placeShip(shipID, isHorizontal, originCell) {
+		if (this._isAIBoard) {
+			originCell = this.randomNumber();
+		}
 		let newShipCells = [];
 		for (let i = 0; i < shipTemplate[shipID].size; i++) {
 			if (isHorizontal) {
@@ -35,16 +39,22 @@ class Gameboard {
 				newShipCells.push(originCell + i * 10);
 			}
 		}
-		if (!this.checkCollisions(newShipCells, isHorizontal)) {
-			return false; // error: collision
-		} else {
+		if (
+			this.checkShipCollisions(newShipCells, isHorizontal) &&
+			this.checkWallCollisions(newShipCells, isHorizontal)
+		) {
+			// No collision, continue
 			this._occupiedCells = this._occupiedCells.concat(newShipCells);
 			let newShip = new Ship(shipTemplate[shipID], newShipCells);
 			this._shipList.push(newShip);
+		} else {
+			// Error: collision
+
+			return false;
 		}
 	}
 
-	checkCollisions(shipCells, isHor) {
+	checkShipCollisions(shipCells, isHor) {
 		let checkCells = [].concat(shipCells);
 		if (isHor) {
 			for (let i = 0; i < shipCells.length; i++) {
@@ -75,16 +85,51 @@ class Gameboard {
 				checkCells.push(shipCells[i] + 1);
 			}
 		}
-		let arrResult = [];
+
+		let arrShipCollisions = [];
 		checkCells.forEach((cell) => {
-			arrResult.push(this._occupiedCells.includes(cell));
+			arrShipCollisions.push(this._occupiedCells.includes(cell));
 		});
-		let result = arrResult.some((x) => x == true);
-		if (result) {
-			return false;
-		} else {
+		let shipCollisions = arrShipCollisions.some((x) => x == true);
+
+		if (!shipCollisions) {
+			// No collisions found
 			return true;
+		} else {
+			// Collisions found
+			console.log('ship collision');
+			return false;
 		}
+	}
+
+	checkWallCollisions(shipCells, isHor) {
+		let lastShipCell = shipCells[shipCells.length - 1];
+		let wallCollisions;
+		if (isHor) {
+			for (let i = 1; i <= 10; i++) {
+				if (lastShipCell === 11 * i - i) {
+					console.log('out of right side bounds');
+					wallCollisions = true;
+				}
+			}
+		} else {
+			if (lastShipCell >= 100) {
+				console.log('out of bottom side bounds');
+				wallCollisions = true;
+			}
+		}
+
+		if (!wallCollisions) {
+			// No collisions found
+			return true;
+		} else {
+			// Collisions found
+			return false;
+		}
+	}
+
+	randomNumber() {
+		return Math.floor(Math.random() * 100);
 	}
 
 	receiveShot(cell) {
@@ -117,6 +162,10 @@ class Gameboard {
 
 	get getShipList() {
 		return this._shipList;
+	}
+
+	get isAIBoard() {
+		return this._isAIBoard;
 	}
 }
 
