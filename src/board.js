@@ -26,19 +26,65 @@ class Gameboard {
 		this._shipList = [];
 	}
 
-	placeShip(shipID, direction, cell) {
-		let arr = [];
+	placeShip(shipID, isHorizontal, originCell) {
+		let newShipCells = [];
 		for (let i = 0; i < shipTemplate[shipID].size; i++) {
-			if (direction === 'hor') {
-				this._occupiedCells.push(cell + i);
-				arr.push(cell + i);
-			} else if (direction === 'ver') {
-				this._occupiedCells.push(cell + i * 10);
-				arr.push(cell + i * 10);
+			if (isHorizontal) {
+				newShipCells.push(originCell + i);
+			} else {
+				newShipCells.push(originCell + i * 10);
 			}
 		}
-		let newShip = new Ship(shipTemplate[shipID], arr);
-		this._shipList.push(newShip);
+		if (!this.checkCollisions(newShipCells, isHorizontal)) {
+			return false; // error: collision
+		} else {
+			this._occupiedCells = this._occupiedCells.concat(newShipCells);
+			let newShip = new Ship(shipTemplate[shipID], newShipCells);
+			this._shipList.push(newShip);
+		}
+	}
+
+	checkCollisions(shipCells, isHor) {
+		let checkCells = [].concat(shipCells);
+		if (isHor) {
+			for (let i = 0; i < shipCells.length; i++) {
+				if (i === 0) {
+					checkCells.push(shipCells[i] - 11);
+					checkCells.push(shipCells[i] - 1);
+					checkCells.push(shipCells[i] + 9);
+				} else if (i === shipCells.length - 1) {
+					checkCells.push(shipCells[i] - 9);
+					checkCells.push(shipCells[i] + 1);
+					checkCells.push(shipCells[i] + 11);
+				}
+				checkCells.push(shipCells[i] - 10);
+				checkCells.push(shipCells[i] + 10);
+			}
+		} else {
+			for (let i = 0; i < shipCells.length; i++) {
+				if (i === 0) {
+					checkCells.push(shipCells[i] - 11);
+					checkCells.push(shipCells[i] - 10);
+					checkCells.push(shipCells[i] - 9);
+				} else if (i === shipCells.length - 1) {
+					checkCells.push(shipCells[i] + 9);
+					checkCells.push(shipCells[i] + 10);
+					checkCells.push(shipCells[i] + 11);
+				}
+				checkCells.push(shipCells[i] - 1);
+				checkCells.push(shipCells[i] + 1);
+			}
+		}
+		let arrResult = [];
+		checkCells.forEach((cell) => {
+			arrResult.push(this._occupiedCells.includes(cell));
+		});
+		let result = arrResult.some((x) => x == true);
+		if (result) {
+			return false;
+		} else {
+			return true;
+		}
 	}
 
 	receiveShot(cell) {
