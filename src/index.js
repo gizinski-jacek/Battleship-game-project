@@ -3,26 +3,25 @@
 import Player from './player';
 import Board from './board';
 
-const boardSize = 100;
 let humanBoard;
 let humanPlayer;
 let computerBoard;
 let computerPlayer;
 
 function setUpGame() {
-	humanBoard = new Board();
+	humanBoard = new Board(false);
 	humanPlayer = new Player('Tony', false, true);
-	humanBoard.placeShip('shipX', true, 0);
+	humanBoard.placeShip('shipX', true, 5);
 	humanBoard.placeShip('shipL', true, 20);
 	humanBoard.placeShip('shipM', false, 50);
 	humanBoard.placeShip('shipS', false, 54);
 
-	computerBoard = new Board();
+	computerBoard = new Board(true);
 	computerPlayer = new Player('EasyAI', true, false);
-	computerBoard.placeShip('shipX', true, randomNumber());
-	computerBoard.placeShip('shipL', true, randomNumber());
-	computerBoard.placeShip('shipM', false, randomNumber());
-	computerBoard.placeShip('shipS', false, randomNumber());
+	computerBoard.placeShip('shipX', true);
+	computerBoard.placeShip('shipL', true);
+	computerBoard.placeShip('shipM', false);
+	computerBoard.placeShip('shipS', false);
 
 	renderGame(humanBoard.getOccupiedCells, computerBoard.getOccupiedCells);
 	humanTurn();
@@ -31,7 +30,7 @@ function setUpGame() {
 function renderGame(cellsPlayer, cellsComp) {
 	const player = document.getElementById('playerBoard');
 	player.innerHTML = '';
-	for (let i = 0; i < boardSize; i++) {
+	for (let i = 0; i < 100; i++) {
 		let cell = document.createElement('div');
 		cell.id = 'p_' + i;
 		cell.classList.add('cellPlayer');
@@ -43,7 +42,7 @@ function renderGame(cellsPlayer, cellsComp) {
 
 	const computer = document.getElementById('computerBoard');
 	computer.innerHTML = '';
-	for (let i = 0; i < boardSize; i++) {
+	for (let i = 0; i < 100; i++) {
 		let cell = document.createElement('div');
 		cell.id = 'c_' + i;
 		cell.classList.add('cellComp');
@@ -74,7 +73,7 @@ function humanTurn() {
 
 function computerTurn() {
 	const cells = document.querySelectorAll('.cellPlayer');
-	let computerShot = computerPlayer.takeShot(boardSize);
+	let computerShot = computerPlayer.takeShot(100);
 	humanBoard.receiveShot(computerShot);
 	cells[computerShot].classList.add('shot');
 	if (humanBoard.checkSunkenShips()) {
@@ -82,10 +81,6 @@ function computerTurn() {
 			setUpGame();
 		}
 	}
-}
-
-function randomNumber() {
-	return Math.floor(Math.random() * boardSize);
 }
 
 setUpGame();
