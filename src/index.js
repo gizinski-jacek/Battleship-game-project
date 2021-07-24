@@ -12,17 +12,17 @@ let computerPlayer;
 function setUpGame() {
 	humanBoard = new Board();
 	humanPlayer = new Player('Tony', false, true);
-	humanBoard.placeShip('shipX', 'hor', 0);
-	humanBoard.placeShip('shipL', 'hor', 20);
-	humanBoard.placeShip('shipM', 'ver', 50);
-	humanBoard.placeShip('shipS', 'ver', 56);
+	humanBoard.placeShip('shipX', true, 0);
+	humanBoard.placeShip('shipL', true, 20);
+	humanBoard.placeShip('shipM', false, 50);
+	humanBoard.placeShip('shipS', false, 54);
 
 	computerBoard = new Board();
 	computerPlayer = new Player('EasyAI', true, false);
-	computerBoard.placeShip('shipX', 'hor', randomNumber());
-	computerBoard.placeShip('shipL', 'hor', randomNumber());
-	computerBoard.placeShip('shipM', 'ver', randomNumber());
-	computerBoard.placeShip('shipS', 'ver', randomNumber());
+	computerBoard.placeShip('shipX', true, randomNumber());
+	computerBoard.placeShip('shipL', true, randomNumber());
+	computerBoard.placeShip('shipM', false, randomNumber());
+	computerBoard.placeShip('shipS', false, randomNumber());
 
 	renderGame(humanBoard.getOccupiedCells, computerBoard.getOccupiedCells);
 	humanTurn();
@@ -30,6 +30,7 @@ function setUpGame() {
 
 function renderGame(cellsPlayer, cellsComp) {
 	const player = document.getElementById('playerBoard');
+	player.innerHTML = '';
 	for (let i = 0; i < boardSize; i++) {
 		let cell = document.createElement('div');
 		cell.id = 'p_' + i;
@@ -41,6 +42,7 @@ function renderGame(cellsPlayer, cellsComp) {
 	}
 
 	const computer = document.getElementById('computerBoard');
+	computer.innerHTML = '';
 	for (let i = 0; i < boardSize; i++) {
 		let cell = document.createElement('div');
 		cell.id = 'c_' + i;
@@ -60,7 +62,9 @@ function humanTurn() {
 			e.currentTarget.removeEventListener('click', click);
 			computerBoard.receiveShot(Number(e.currentTarget.id.split('_')[1]));
 			if (computerBoard.checkSunkenShips()) {
-				alert('You have won!');
+				if (confirm('You have won! Play again?')) {
+					setUpGame();
+				}
 			} else {
 				computerTurn();
 			}
@@ -74,13 +78,14 @@ function computerTurn() {
 	humanBoard.receiveShot(computerShot);
 	cells[computerShot].classList.add('shot');
 	if (humanBoard.checkSunkenShips()) {
-		alert('You have lost!');
+		if (confirm('You have lost! Play again?')) {
+			setUpGame();
+		}
 	}
 }
 
 function randomNumber() {
-	let random;
-	return (random = Math.floor(Math.random() * boardSize));
+	return Math.floor(Math.random() * boardSize);
 }
 
 setUpGame();
