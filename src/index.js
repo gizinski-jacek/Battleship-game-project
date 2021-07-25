@@ -11,17 +11,17 @@ let computerPlayer;
 function setUpGame() {
 	humanBoard = new Board(false);
 	humanPlayer = new Player('Tony', false, true);
-	humanBoard.placeShip('shipX', true, 5);
+	humanBoard.placeShip('shipX', true, 4);
 	humanBoard.placeShip('shipL', true, 20);
 	humanBoard.placeShip('shipM', false, 50);
 	humanBoard.placeShip('shipS', false, 54);
 
 	computerBoard = new Board(true);
 	computerPlayer = new Player('EasyAI', true, false);
-	// computerBoard.placeShip('shipX');
-	// computerBoard.placeShip('shipL');
-	// computerBoard.placeShip('shipM');
-	// computerBoard.placeShip('shipS');
+	computerBoard.placeShip('shipX');
+	computerBoard.placeShip('shipL');
+	computerBoard.placeShip('shipM');
+	computerBoard.placeShip('shipS');
 
 	renderGame(humanBoard.getOccupiedCells, computerBoard.getOccupiedCells);
 	humanTurn();
