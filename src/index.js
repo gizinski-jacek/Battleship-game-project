@@ -18,10 +18,10 @@ function setUpGame() {
 
 	computerBoard = new Board(true);
 	computerPlayer = new Player('EasyAI', true, false);
-	computerBoard.placeShip('shipX', true);
-	computerBoard.placeShip('shipL', true);
-	computerBoard.placeShip('shipM', false);
-	computerBoard.placeShip('shipS', false);
+	// computerBoard.placeShip('shipX');
+	// computerBoard.placeShip('shipL');
+	// computerBoard.placeShip('shipM');
+	// computerBoard.placeShip('shipS');
 
 	renderGame(humanBoard.getOccupiedCells, computerBoard.getOccupiedCells);
 	humanTurn();
