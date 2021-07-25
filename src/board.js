@@ -86,12 +86,15 @@ class Gameboard {
 			}
 		}
 
-		// Refactor, dont need to check entire array, break out on first "true"
-		let arrShipCollisions = [];
-		checkCells.forEach((cell) => {
-			arrShipCollisions.push(this._occupiedCells.includes(cell));
-		});
-		let shipCollisions = arrShipCollisions.some((x) => x == true);
+		let shipCollisions = undefined;
+		for (let cell of checkCells) {
+			if (this._occupiedCells.includes(cell)) {
+				console.log('found collision');
+				shipCollisions = true;
+				break;
+			}
+		}
+
 		if (!shipCollisions) {
 			// No collisions found
 			return true;
