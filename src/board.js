@@ -29,7 +29,8 @@ class Gameboard {
 
 	placeShip(shipID, isHorizontal, originCell) {
 		if (this._isAIBoard) {
-			originCell = this.randomNumber();
+			isHorizontal = this.randomNumber(2);
+			originCell = this.randomNumber(100);
 		}
 		let newShipCells = [];
 		for (let i = 0; i < shipTemplate[shipID].size; i++) {
@@ -49,7 +50,6 @@ class Gameboard {
 			this._shipList.push(newShip);
 		} else {
 			// Error: collision
-
 			return false;
 		}
 	}
@@ -86,12 +86,12 @@ class Gameboard {
 			}
 		}
 
+		// Refactor, dont need to check entire array, break out on first "true"
 		let arrShipCollisions = [];
 		checkCells.forEach((cell) => {
 			arrShipCollisions.push(this._occupiedCells.includes(cell));
 		});
 		let shipCollisions = arrShipCollisions.some((x) => x == true);
-
 		if (!shipCollisions) {
 			// No collisions found
 			return true;
@@ -103,22 +103,27 @@ class Gameboard {
 	}
 
 	checkWallCollisions(shipCells, isHor) {
-		let lastShipCell = shipCells[shipCells.length - 1];
-		let wallCollisions;
-		if (isHor) {
-			for (let i = 1; i <= 10; i++) {
-				if (lastShipCell === 11 * i - i) {
-					console.log('out of right side bounds');
-					wallCollisions = true;
+		let wallCollisions = undefined;
+		if (isHor && wallCollisions === undefined) {
+			let testCells = shipCells.slice(1);
+			for (let i = 1; i < 11; i++) {
+				for (let cell of testCells) {
+					if (cell === 11 * i - i) {
+						console.log('out of right side bounds');
+						wallCollisions = true;
+						break;
+					}
+				}
+				if (wallCollisions) {
+					break;
 				}
 			}
 		} else {
-			if (lastShipCell >= 100) {
+			if (shipCells[shipCells.length - 1] > 99) {
 				console.log('out of bottom side bounds');
 				wallCollisions = true;
 			}
 		}
-
 		if (!wallCollisions) {
 			// No collisions found
 			return true;
@@ -128,8 +133,8 @@ class Gameboard {
 		}
 	}
 
-	randomNumber() {
-		return Math.floor(Math.random() * 100);
+	randomNumber(range) {
+		return Math.floor(Math.random() * range);
 	}
 
 	receiveShot(cell) {
