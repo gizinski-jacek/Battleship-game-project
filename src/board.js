@@ -41,8 +41,8 @@ class Gameboard {
 			}
 		}
 		if (
-			this.checkShipCollisions(newShipCells, isHorizontal) &&
-			this.checkWallCollisions(newShipCells, isHorizontal)
+			this.checkWallCollisions(newShipCells, isHorizontal) &&
+			this.checkShipCollisions(newShipCells, isHorizontal)
 		) {
 			// No collision, continue
 			this._occupiedCells = this._occupiedCells.concat(newShipCells);
@@ -55,14 +55,27 @@ class Gameboard {
 	}
 
 	checkShipCollisions(shipCells, isHor) {
+		// Array of numbers from 1 to 9
+		let testArray1 = Array.from({ length: 10 }, (x, y) => y);
+
+		// Used to check whether ships first cell starts on a cell in first column.
+		// It it does then it doesn't add unnecessary numbers to array for later collision checks.
+		let testArray2 = testArray1.map((x) => x * 10);
+
+		// Same as above but for last column instead.
+		let testArray3 = testArray2.map((x) => x + 9);
+
 		let checkCells = [].concat(shipCells);
 		if (isHor) {
 			for (let i = 0; i < shipCells.length; i++) {
-				if (i === 0) {
+				if (i === 0 && !testArray2.includes(shipCells[0])) {
 					checkCells.push(shipCells[i] - 11);
 					checkCells.push(shipCells[i] - 1);
 					checkCells.push(shipCells[i] + 9);
-				} else if (i === shipCells.length - 1) {
+				} else if (
+					i === shipCells.length - 1 &&
+					!testArray3.includes(shipCells[shipCells.length - 1])
+				) {
 					checkCells.push(shipCells[i] - 9);
 					checkCells.push(shipCells[i] + 1);
 					checkCells.push(shipCells[i] + 11);
@@ -85,22 +98,19 @@ class Gameboard {
 				checkCells.push(shipCells[i] + 1);
 			}
 		}
-
 		let shipCollisions = undefined;
 		for (let cell of checkCells) {
 			if (this._occupiedCells.includes(cell)) {
-				console.log('found collision');
 				shipCollisions = true;
 				break;
 			}
 		}
 
 		if (!shipCollisions) {
-			// No collisions found
+			// No collision found
 			return true;
 		} else {
-			// Collisions found
-			console.log('ship collision');
+			// Collision found
 			return false;
 		}
 	}
@@ -112,7 +122,6 @@ class Gameboard {
 			for (let i = 1; i < 11; i++) {
 				for (let cell of testCells) {
 					if (cell === 11 * i - i) {
-						console.log('out of right side bounds');
 						wallCollisions = true;
 						break;
 					}
@@ -123,7 +132,6 @@ class Gameboard {
 			}
 		} else {
 			if (shipCells[shipCells.length - 1] > 99) {
-				console.log('out of bottom side bounds');
 				wallCollisions = true;
 			}
 		}
