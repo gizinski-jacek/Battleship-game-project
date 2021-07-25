@@ -19,6 +19,16 @@ const shipTemplate = {
 	},
 };
 
+// Array of numbers from 1 to 9
+const arrayRange = Array.from({ length: 10 }, (x, y) => y);
+
+// Used to check whether ships first cell starts on a cell in first column.
+// It it does then it doesn't add unnecessary numbers to array for later ship collision checks.
+const firstColumnCells = arrayRange.map((x) => x * 10);
+
+// Same as above but for last column instead.
+const lastColumnCells = firstColumnCells.map((x) => x + 9);
+
 class Gameboard {
 	constructor(isAIBoard = false) {
 		this._occupiedCells = [];
@@ -54,27 +64,46 @@ class Gameboard {
 		}
 	}
 
+	checkWallCollisions(shipCells, isHor) {
+		let wallCollisions = undefined;
+		if (isHor && wallCollisions === undefined) {
+			let testCells = shipCells.slice(1);
+			for (let i = 1; i < 11; i++) {
+				for (let cell of testCells) {
+					if (cell === 11 * i - i) {
+						wallCollisions = true;
+						break;
+					}
+				}
+				if (wallCollisions) {
+					break;
+				}
+			}
+		} else {
+			if (shipCells[shipCells.length - 1] > 99) {
+				wallCollisions = true;
+			}
+		}
+		if (!wallCollisions) {
+			// No collisions found
+			return true;
+		} else {
+			// Collisions found
+			return false;
+		}
+	}
+
 	checkShipCollisions(shipCells, isHor) {
-		// Array of numbers from 1 to 9
-		let testArray1 = Array.from({ length: 10 }, (x, y) => y);
-
-		// Used to check whether ships first cell starts on a cell in first column.
-		// It it does then it doesn't add unnecessary numbers to array for later collision checks.
-		let testArray2 = testArray1.map((x) => x * 10);
-
-		// Same as above but for last column instead.
-		let testArray3 = testArray2.map((x) => x + 9);
-
 		let checkCells = [].concat(shipCells);
 		if (isHor) {
 			for (let i = 0; i < shipCells.length; i++) {
-				if (i === 0 && !testArray2.includes(shipCells[0])) {
+				if (i === 0 && !firstColumnCells.includes(shipCells[0])) {
 					checkCells.push(shipCells[i] - 11);
 					checkCells.push(shipCells[i] - 1);
 					checkCells.push(shipCells[i] + 9);
 				} else if (
 					i === shipCells.length - 1 &&
-					!testArray3.includes(shipCells[shipCells.length - 1])
+					!lastColumnCells.includes(shipCells[shipCells.length - 1])
 				) {
 					checkCells.push(shipCells[i] - 9);
 					checkCells.push(shipCells[i] + 1);
@@ -111,35 +140,6 @@ class Gameboard {
 			return true;
 		} else {
 			// Collision found
-			return false;
-		}
-	}
-
-	checkWallCollisions(shipCells, isHor) {
-		let wallCollisions = undefined;
-		if (isHor && wallCollisions === undefined) {
-			let testCells = shipCells.slice(1);
-			for (let i = 1; i < 11; i++) {
-				for (let cell of testCells) {
-					if (cell === 11 * i - i) {
-						wallCollisions = true;
-						break;
-					}
-				}
-				if (wallCollisions) {
-					break;
-				}
-			}
-		} else {
-			if (shipCells[shipCells.length - 1] > 99) {
-				wallCollisions = true;
-			}
-		}
-		if (!wallCollisions) {
-			// No collisions found
-			return true;
-		} else {
-			// Collisions found
 			return false;
 		}
 	}
