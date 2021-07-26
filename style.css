@@ -1,32 +1,61 @@
+:root {
+	font-size: 16px;
+	font-family: Verdana, Tahoma, sans-serif;
+}
+
 body {
 	height: 100vh;
 }
 
 .main {
+	font-size: 1.25rem;
 	height: 100%;
 	display: flex;
-	justify-content: space-around;
+	flex-direction: column;
+	justify-content: center;
 	align-items: center;
-	flex-direction: row;
+}
+
+.gameboards {
+	display: flex;
+}
+
+.controls {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+input[type='radio'] + p {
+	background-color: rgb(251, 255, 0);
+	font-size: 0.75rem;
+	padding: 3px 5px;
+	border: 1px solid black;
+	margin-left: 0.5rem;
+}
+
+label {
+	padding: 0.5rem;
+	padding-right: 2rem;
 }
 
 .board {
 	display: grid;
 	grid-template-columns: repeat(10, auto);
-	margin: 20px;
+	margin: 1.5rem;
 	border: 2px solid black;
 	box-sizing: border-box;
 }
 
 .cellPlayer,
 .cellComp {
-	padding: 20px;
+	padding: 1.25rem;
 	border: 1px solid black;
 	cursor: crosshair;
 	user-select: none;
 }
 
-.cellPlayer {
+.disableEvents {
 	pointer-events: none;
 }
 
