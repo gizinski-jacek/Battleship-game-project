@@ -1,20 +1,20 @@
 const Ship = require('./ship');
 
 const shipTemplate = {
-	shipS: {
-		name: 'S',
+	Cruiser: {
+		name: 'Cruiser',
 		size: 2,
 	},
-	shipM: {
-		name: 'M',
+	Destroyer: {
+		name: 'Destroyer',
 		size: 3,
 	},
-	shipL: {
-		name: 'L',
+	Battlecruiser: {
+		name: 'Battlecruiser',
 		size: 4,
 	},
-	shipX: {
-		name: 'X',
+	Battleship: {
+		name: 'Battleship',
 		size: 5,
 	},
 };
@@ -38,6 +38,10 @@ class Gameboard {
 	}
 
 	placeShip(shipID, isHorizontal, originCell) {
+		if (shipID === null) {
+			return;
+		}
+		originCell = Number(originCell);
 		if (this._isAIBoard) {
 			isHorizontal = this.randomNumber(2);
 			originCell = this.randomNumber(100);
@@ -84,6 +88,7 @@ class Gameboard {
 				wallCollisions = true;
 			}
 		}
+
 		if (!wallCollisions) {
 			// No collisions found
 			return true;
@@ -149,6 +154,7 @@ class Gameboard {
 	}
 
 	receiveShot(cell) {
+		// Refactor!
 		if (this._occupiedCells.includes(cell)) {
 			let foundShips = this._shipList.filter((ship) =>
 				ship.getCellsOccupied.includes(cell)
