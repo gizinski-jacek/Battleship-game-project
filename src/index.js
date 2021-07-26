@@ -4,49 +4,63 @@ import Player from './player';
 import Board from './board';
 
 const radioShipType = document.getElementsByName('shipType');
-const counter = document.querySelectorAll('.counter');
+const counter = document.getElementsByTagName('span');
 const horizontal = document.getElementById('horizontal');
-const start = document.querySelector('.start');
+const start = document.getElementById('start');
 
-let humanBoard;
+let humanBoardDOM = document.getElementById('humanBoard');
+let computerBoardDOM = document.getElementById('computerBoard');
+
+let humanGameboard;
 let humanPlayer;
-let computerBoard;
+let computerGameboard;
 let computerPlayer;
-let shipType = 'Battleship';
+let shipType;
 
 start.addEventListener('click', () => {
-	const cellPlayer = document.querySelectorAll('.cellPlayer');
-	cellPlayer.forEach((cell) => {
+	const cellHuman = document.querySelectorAll('.cellHuman');
+	cellHuman.forEach((cell) => {
 		cell.classList.add('disableEvents');
 	});
-	humanTurn();
+	startHumanTurn();
 });
 
-function attachListeners() {
-	const cellPlayer = document.querySelectorAll('.cellPlayer');
-	cellPlayer.forEach((cell) => {
+function reduceAvailableShipCounter(shipID) {
+	for (let count of counter) {
+		if (count.className === shipID && count.textContent > 0) {
+			count.textContent = count.textContent - 1;
+			if (count.textContent <= 0) {
+				document.getElementById(shipID).checked = false;
+				document.getElementById(shipID).setAttribute('disabled', true);
+				shipType = null;
+			}
+		}
+	}
+}
+
+function attemptShipPlacement(id, dir, cell) {
+	if (humanGameboard.placeShip(id, dir, cell)) {
+		humanGameboard.placeShip(id, dir, cell);
+		reduceAvailableShipCounter(id);
+		renderGame();
+	} else {
+		alert('Incorrect ship placement!');
+	}
+}
+
+function playerPlaceShips() {
+	const cellHuman = document.querySelectorAll('.cellHuman');
+	cellHuman.forEach((cell) => {
 		cell.addEventListener('click', (e) => {
-			humanBoard.placeShip(
-				shipType,
-				horizontal.checked,
-				e.currentTarget.id.split('_')[1]
-			);
-			counter.forEach((count) => {
-				if (
-					count.classList.contains(shipType) &&
-					count.textContent > 0
-				) {
-					count.textContent = count.textContent - 1;
-					if (count.textContent <= 0) {
-						document.getElementById(shipType).checked = false;
-						document
-							.getElementById(shipType)
-							.setAttribute('disabled', true);
-						shipType = null;
-					}
-				}
-			});
-			renderGame();
+			if (shipType) {
+				attemptShipPlacement(
+					shipType,
+					horizontal.checked,
+					e.currentTarget.id.split('_')[1]
+				);
+			} else {
+				alert('Pick a ship to place!');
+			}
 		});
 	});
 }
@@ -58,70 +72,69 @@ radioShipType.forEach((radio) => {
 });
 
 function setUpGame() {
-	humanBoard = new Board(false);
+	humanGameboard = new Board(false);
 	humanPlayer = new Player('Tony', false, true);
 
-	computerBoard = new Board(true);
+	computerGameboard = new Board(true);
 	computerPlayer = new Player('EasyAI', true, false);
-	computerBoard.placeShip('Battleship');
-	computerBoard.placeShip('Battlecruiser');
-	computerBoard.placeShip('Destroyer');
-	computerBoard.placeShip('Cruiser');
+	computerGameboard.placeShip('Battleship');
+	computerGameboard.placeShip('Battlecruiser');
+	computerGameboard.placeShip('Destroyer');
+	computerGameboard.placeShip('Cruiser');
 
 	renderGame();
 }
 
 function renderGame() {
-	const player = document.getElementById('playerBoard');
-	player.innerHTML = '';
+	humanBoardDOM.innerHTML = '';
 	for (let i = 0; i < 100; i++) {
 		let cell = document.createElement('div');
 		cell.id = 'p_' + i;
-		cell.classList.add('cellPlayer');
-		if (humanBoard.getOccupiedCells.includes(i)) {
+		cell.classList.add('cellHuman');
+		if (humanGameboard.getOccupiedCells.includes(i)) {
 			cell.classList.add('ship');
 		}
-		player.append(cell);
+		humanBoardDOM.append(cell);
 	}
 
-	const computer = document.getElementById('computerBoard');
-	computer.innerHTML = '';
+	computerBoardDOM.innerHTML = '';
 	for (let i = 0; i < 100; i++) {
 		let cell = document.createElement('div');
 		cell.id = 'c_' + i;
-		cell.classList.add('cellComp');
-		if (computerBoard.getOccupiedCells.includes(i)) {
+		cell.classList.add('cellComputer');
+		if (computerGameboard.getOccupiedCells.includes(i)) {
 			cell.classList.add('ship');
 		}
-		computer.append(cell);
+		computerBoardDOM.append(cell);
 	}
-	attachListeners();
+	playerPlaceShips();
 }
 
-function humanTurn() {
-	const cells = document.querySelectorAll('.cellComp');
-	cells.forEach((cell) => {
+// Needs fixing!
+function startHumanTurn() {
+	const cellsComputer = document.querySelectorAll('.cellComputer');
+	cellsComputer.forEach((cell) => {
 		cell.addEventListener('click', function click(e) {
 			e.currentTarget.classList.add('shot');
 			e.currentTarget.removeEventListener('click', click);
-			computerBoard.receiveShot(e.currentTarget.id.split('_')[1]);
-			if (computerBoard.checkSunkenShips()) {
+			computerGameboard.receiveShot(e.currentTarget.id.split('_')[1]);
+			if (computerGameboard.checkSunkenShips()) {
 				if (confirm('You have won! Play again?')) {
 					setUpGame();
 				}
 			} else {
-				computerTurn();
+				startComputerTurn();
 			}
 		});
 	});
 }
 
-function computerTurn() {
-	const cells = document.querySelectorAll('.cellPlayer');
+function startComputerTurn() {
+	const cellsHuman = document.querySelectorAll('.cellHuman');
 	let computerShot = computerPlayer.takeShot(100);
-	humanBoard.receiveShot(computerShot);
-	cells[computerShot].classList.add('shot');
-	if (humanBoard.checkSunkenShips()) {
+	humanGameboard.receiveShot(computerShot);
+	cellsHuman[computerShot].classList.add('shot');
+	if (humanGameboard.checkSunkenShips()) {
 		if (confirm('You have lost! Play again?')) {
 			setUpGame();
 		}
