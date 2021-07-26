@@ -38,8 +38,8 @@ class Gameboard {
 	}
 
 	placeShip(shipID, isHorizontal, originCell) {
-		if (shipID === null) {
-			return;
+		if (!shipID) {
+			return false;
 		}
 		originCell = Number(originCell);
 		if (this._isAIBoard) {
@@ -62,6 +62,7 @@ class Gameboard {
 			this._occupiedCells = this._occupiedCells.concat(newShipCells);
 			let newShip = new Ship(shipTemplate[shipID], newShipCells);
 			this._shipList.push(newShip);
+			return true;
 		} else {
 			// Error: collision
 			return false;
