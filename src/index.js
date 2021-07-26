@@ -3,38 +3,82 @@
 import Player from './player';
 import Board from './board';
 
+const radioShipType = document.getElementsByName('shipType');
+const counter = document.querySelectorAll('.counter');
+const horizontal = document.getElementById('horizontal');
+const start = document.querySelector('.start');
+
 let humanBoard;
 let humanPlayer;
 let computerBoard;
 let computerPlayer;
+let shipType = 'Battleship';
+
+start.addEventListener('click', () => {
+	const cellPlayer = document.querySelectorAll('.cellPlayer');
+	cellPlayer.forEach((cell) => {
+		cell.classList.add('disableEvents');
+	});
+	humanTurn();
+});
+
+function attachListeners() {
+	const cellPlayer = document.querySelectorAll('.cellPlayer');
+	cellPlayer.forEach((cell) => {
+		cell.addEventListener('click', (e) => {
+			humanBoard.placeShip(
+				shipType,
+				horizontal.checked,
+				e.currentTarget.id.split('_')[1]
+			);
+			counter.forEach((count) => {
+				if (
+					count.classList.contains(shipType) &&
+					count.textContent > 0
+				) {
+					count.textContent = count.textContent - 1;
+					if (count.textContent <= 0) {
+						document.getElementById(shipType).checked = false;
+						document
+							.getElementById(shipType)
+							.setAttribute('disabled', true);
+						shipType = null;
+					}
+				}
+			});
+			renderGame();
+		});
+	});
+}
+
+radioShipType.forEach((radio) => {
+	radio.addEventListener('click', (e) => {
+		shipType = e.currentTarget.id;
+	});
+});
 
 function setUpGame() {
 	humanBoard = new Board(false);
 	humanPlayer = new Player('Tony', false, true);
-	humanBoard.placeShip('shipX', true, 4);
-	humanBoard.placeShip('shipL', true, 20);
-	humanBoard.placeShip('shipM', false, 50);
-	humanBoard.placeShip('shipS', false, 54);
 
 	computerBoard = new Board(true);
 	computerPlayer = new Player('EasyAI', true, false);
-	computerBoard.placeShip('shipX');
-	computerBoard.placeShip('shipL');
-	computerBoard.placeShip('shipM');
-	computerBoard.placeShip('shipS');
+	computerBoard.placeShip('Battleship');
+	computerBoard.placeShip('Battlecruiser');
+	computerBoard.placeShip('Destroyer');
+	computerBoard.placeShip('Cruiser');
 
-	renderGame(humanBoard.getOccupiedCells, computerBoard.getOccupiedCells);
-	humanTurn();
+	renderGame();
 }
 
-function renderGame(cellsPlayer, cellsComp) {
+function renderGame() {
 	const player = document.getElementById('playerBoard');
 	player.innerHTML = '';
 	for (let i = 0; i < 100; i++) {
 		let cell = document.createElement('div');
 		cell.id = 'p_' + i;
 		cell.classList.add('cellPlayer');
-		if (cellsPlayer.includes(i)) {
+		if (humanBoard.getOccupiedCells.includes(i)) {
 			cell.classList.add('ship');
 		}
 		player.append(cell);
@@ -46,11 +90,12 @@ function renderGame(cellsPlayer, cellsComp) {
 		let cell = document.createElement('div');
 		cell.id = 'c_' + i;
 		cell.classList.add('cellComp');
-		if (cellsComp.includes(i)) {
+		if (computerBoard.getOccupiedCells.includes(i)) {
 			cell.classList.add('ship');
 		}
 		computer.append(cell);
 	}
+	attachListeners();
 }
 
 function humanTurn() {
@@ -59,7 +104,7 @@ function humanTurn() {
 		cell.addEventListener('click', function click(e) {
 			e.currentTarget.classList.add('shot');
 			e.currentTarget.removeEventListener('click', click);
-			computerBoard.receiveShot(Number(e.currentTarget.id.split('_')[1]));
+			computerBoard.receiveShot(e.currentTarget.id.split('_')[1]);
 			if (computerBoard.checkSunkenShips()) {
 				if (confirm('You have won! Play again?')) {
 					setUpGame();
