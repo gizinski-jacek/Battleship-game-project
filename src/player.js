@@ -8,7 +8,7 @@ class Player {
 	takeShot(cell) {
 		if (this._isAI) {
 			let random = null;
-			while (random === null || this._shotCells.includes(random)) {
+			while (!random || this._shotCells.includes(random)) {
 				random = Math.floor(Math.random() * cell);
 			}
 			this._shotCells.push(random);
