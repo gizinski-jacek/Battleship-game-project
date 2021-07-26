@@ -9,8 +9,57 @@
 	</head>
 	<body>
 		<div class="main">
-			<div class="board" id="playerBoard"></div>
-			<div class="board" id="computerBoard"></div>
+			<div class="controls">
+				<input
+					type="radio"
+					name="shipType"
+					id="Battleship"
+					autocomplete="off"
+					checked
+				/>
+				<p class="counter Battleship">1</p>
+				<label for="Battleship">Battleship</label>
+				<input
+					type="radio"
+					name="shipType"
+					id="Battlecruiser"
+					autocomplete="off"
+					disabled
+				/>
+				<p class="counter Battlecruiser">2</p>
+				<label for="Battlecruiser">Battlecruiser</label>
+				<input
+					type="radio"
+					name="shipType"
+					id="Destroyer"
+					autocomplete="off"
+				/>
+				<p class="counter Destroyer">3</p>
+				<label for="Destroyer">Destroyer</label>
+				<input
+					type="radio"
+					name="shipType"
+					id="Cruiser"
+					autocomplete="off"
+				/>
+				<p class="counter Cruiser">4</p>
+				<label for="Cruiser">Cruiser</label>
+			</div>
+			<div>
+				<button class="start">Start</button>
+				<input
+					type="checkbox"
+					name="direction"
+					id="horizontal"
+					autocomplete="off"
+					checked
+				/>
+				<label for="horizontal">Horizontal</label>
+			</div>
+			<div class="gameboards">
+				<div class="board" id="playerBoard"></div>
+				<div class="board" id="computerBoard"></div>
+			</div>
 		</div>
 		<script src="main.js" type="text/javascript"></script>
 	</body>
