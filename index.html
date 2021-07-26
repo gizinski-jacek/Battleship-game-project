@@ -15,18 +15,16 @@
 					name="shipType"
 					id="Battleship"
 					autocomplete="off"
-					checked
 				/>
-				<p class="counter Battleship">1</p>
+				<span class="Battleship">1</span>
 				<label for="Battleship">Battleship</label>
 				<input
 					type="radio"
 					name="shipType"
 					id="Battlecruiser"
 					autocomplete="off"
-					disabled
 				/>
-				<p class="counter Battlecruiser">2</p>
+				<span class="Battlecruiser">2</span>
 				<label for="Battlecruiser">Battlecruiser</label>
 				<input
 					type="radio"
@@ -34,7 +32,7 @@
 					id="Destroyer"
 					autocomplete="off"
 				/>
-				<p class="counter Destroyer">3</p>
+				<span class="Destroyer">3</span>
 				<label for="Destroyer">Destroyer</label>
 				<input
 					type="radio"
@@ -42,11 +40,11 @@
 					id="Cruiser"
 					autocomplete="off"
 				/>
-				<p class="counter Cruiser">4</p>
+				<span class="Cruiser">4</span>
 				<label for="Cruiser">Cruiser</label>
 			</div>
 			<div>
-				<button class="start">Start</button>
+				<button id="start">Start</button>
 				<input
 					type="checkbox"
 					name="direction"
@@ -57,7 +55,7 @@
 				<label for="horizontal">Horizontal</label>
 			</div>
 			<div class="gameboards">
-				<div class="board" id="playerBoard"></div>
+				<div class="board" id="humanBoard"></div>
 				<div class="board" id="computerBoard"></div>
 			</div>
 		</div>
