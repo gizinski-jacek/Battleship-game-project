@@ -54,6 +54,12 @@ label {
 	border: 1px solid black;
 	cursor: crosshair;
 	user-select: none;
+	background-color: rgb(255, 255, 200);
+}
+input,
+label,
+span {
+	user-select: none;
 }
 
 .disableEvents {
