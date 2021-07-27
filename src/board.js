@@ -37,36 +37,45 @@ class Gameboard {
 		this._isAIBoard = isAIBoard;
 	}
 
-	placeShip(shipID, isHorizontal, originCell) {
+	placeShip(shipID, isHorizontal, startingCell) {
 		if (!shipID) {
 			return false;
 		}
-		originCell = Number(originCell);
+		startingCell = Number(startingCell);
 		if (this._isAIBoard) {
 			isHorizontal = this.randomNumber(2);
-			originCell = this.randomNumber(100);
+			startingCell = this.randomNumber(100);
 		}
-		let newShipCells = [];
-		for (let i = 0; i < shipTemplate[shipID].size; i++) {
-			if (isHorizontal) {
-				newShipCells.push(originCell + i);
-			} else {
-				newShipCells.push(originCell + i * 10);
-			}
-		}
+		const newShipCells = this.calculateShipPlacement(
+			shipTemplate[shipID].size,
+			isHorizontal,
+			startingCell
+		);
 		if (
 			this.checkWallCollisions(newShipCells, isHorizontal) &&
 			this.checkShipCollisions(newShipCells, isHorizontal)
 		) {
 			// No collision, continue
 			this._occupiedCells = this._occupiedCells.concat(newShipCells);
-			let newShip = new Ship(shipTemplate[shipID], newShipCells);
+			const newShip = new Ship(shipTemplate[shipID], newShipCells);
 			this._shipList.push(newShip);
 			return true;
 		} else {
 			// Error: collision
 			return false;
 		}
+	}
+
+	calculateShipPlacement(size, isHor, firstCell) {
+		const cells = [];
+		for (let i = 0; i < size; i++) {
+			if (isHor) {
+				cells.push(firstCell + i);
+			} else {
+				cells.push(firstCell + i * 10);
+			}
+		}
+		return cells;
 	}
 
 	checkWallCollisions(shipCells, isHor) {
@@ -155,24 +164,21 @@ class Gameboard {
 	}
 
 	receiveShot(cell) {
-		// Refactor!
+		cell = Number(cell);
 		if (this._occupiedCells.includes(cell)) {
-			let foundShips = this._shipList.filter((ship) =>
+			const targetShip = this._shipList.find((ship) =>
 				ship.getCellsOccupied.includes(cell)
 			);
-			foundShips[0].getShot(cell);
+			targetShip.getShot(cell);
+			return true;
 		} else {
 			this._missedShotsCells.push(cell);
+			return false;
 		}
 	}
 
-	checkSunkenShips() {
-		let arr = [];
-		this._shipList.forEach((ship) => {
-			arr.push(ship.isSunk());
-		});
-		let result = arr.every((x) => x == true);
-		return result;
+	checkWinner() {
+		return this._shipList.every((ship) => ship.isSunk());
 	}
 
 	get getOccupiedCells() {
