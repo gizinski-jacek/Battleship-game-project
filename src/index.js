@@ -77,6 +77,7 @@ function setUpGame() {
 
 	computerGameboard = new Board(true);
 	computerPlayer = new Player('EasyAI', true, false);
+
 	computerGameboard.placeShip('Battleship');
 	computerGameboard.placeShip('Battlecruiser');
 	computerGameboard.placeShip('Destroyer');
@@ -110,19 +111,21 @@ function renderGame() {
 	playerPlaceShips();
 }
 
-// Needs fixing!
+// Needs refactoring!!
 function startHumanTurn() {
 	const cellsComputer = document.querySelectorAll('.cellComputer');
 	cellsComputer.forEach((cell) => {
 		cell.addEventListener('click', function click(e) {
+			console.log(cellsComputer);
+			console.log(e.currentTarget);
 			e.currentTarget.classList.add('shot');
 			e.currentTarget.removeEventListener('click', click);
-			computerGameboard.receiveShot(e.currentTarget.id.split('_')[1]);
-			if (computerGameboard.checkSunkenShips()) {
-				if (confirm('You have won! Play again?')) {
-					setUpGame();
-				}
+			if (
+				computerGameboard.receiveShot(e.currentTarget.id.split('_')[1])
+			) {
+				computerGameboard.receiveShot(e.currentTarget.id.split('_')[1]);
 			} else {
+				computerGameboard.receiveShot(e.currentTarget.id.split('_')[1]);
 				startComputerTurn();
 			}
 		});
@@ -130,11 +133,20 @@ function startHumanTurn() {
 }
 
 function startComputerTurn() {
-	const cellsHuman = document.querySelectorAll('.cellHuman');
-	let computerShot = computerPlayer.takeShot(100);
-	humanGameboard.receiveShot(computerShot);
-	cellsHuman[computerShot].classList.add('shot');
-	if (humanGameboard.checkSunkenShips()) {
+	if (computerGameboard.checkWinner()) {
+		if (confirm('You have won! Play again?')) {
+			setUpGame();
+		}
+	} else {
+		const cellsHuman = document.querySelectorAll('.cellHuman');
+		let computerShot;
+		do {
+			computerShot = computerPlayer.takeShot(100);
+			cellsHuman[computerShot].classList.add('shot');
+			humanGameboard.receiveShot(computerShot);
+		} while (humanGameboard.receiveShot(computerShot));
+	}
+	if (humanGameboard.checkWinner()) {
 		if (confirm('You have lost! Play again?')) {
 			setUpGame();
 		}
