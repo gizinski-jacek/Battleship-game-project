@@ -8,6 +8,7 @@ const counters = document.getElementsByTagName('span');
 const horizontal = document.getElementById('horizontal');
 const start = document.getElementById('start');
 const restart = document.getElementById('restart');
+const shipControls = document.querySelector('.shipControls');
 const gameboardsDiv = document.querySelector('.gameboards');
 
 let humanGameboard;
@@ -15,20 +16,42 @@ let humanPlayer;
 let computerGameboard;
 let computerPlayer;
 let shipType;
+let gameStarted;
 
 start.addEventListener('click', () => {
-	const board = document.getElementById('humanBoard');
-	let boardClone = board.cloneNode(true);
-	board.parentNode.replaceChild(boardClone, board);
-	renderComputerBoard();
-	startHumanTurn();
+	if (!gameStarted) {
+		gameStarted = true;
+		const board = document.getElementById('humanBoard');
+		let boardClone = board.cloneNode(true);
+		board.parentNode.replaceChild(boardClone, board);
+		shipControls.style.display = 'none';
+		horizontal.disabled = gameStarted;
+		toggleShipSelect();
+		renderComputerBoard();
+		startHumanTurn();
+	}
 });
 
-restart.addEventListener('click', initializeGame);
+restart.addEventListener('click', () => {
+	gameStarted = false;
+	shipControls.style.display = 'flex';
+	toggleShipSelect();
+	initializeGame();
+});
 
 function resetCounters() {
 	for (let i = 0; i < counters.length; i++) {
 		counters[i].textContent = i + 1;
+	}
+}
+
+function toggleShipSelect() {
+	const radios = document.querySelectorAll('input[name=shipType]');
+	for (let i = 0; i < radios.length; i++) {
+		radios[i].checked = false;
+		radios[i].disabled = gameStarted;
+		horizontal.checked = true;
+		horizontal.disabled = gameStarted;
 	}
 }
 
@@ -87,6 +110,10 @@ function setUpGame() {
 	computerGameboard.placeShip('Battlecruiser');
 	computerGameboard.placeShip('Destroyer');
 	computerGameboard.placeShip('Cruiser');
+
+	/////////////////////////////////////////////
+	// Do a loop here placing all ships for AI //
+	/////////////////////////////////////////////
 }
 
 function renderHumanBoard() {
