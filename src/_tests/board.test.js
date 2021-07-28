@@ -52,7 +52,7 @@ describe('Gameboard Factory functions', () => {
 		humanBoard.receiveShot(4);
 		humanBoard.receiveShot(21);
 		humanBoard.receiveShot(31);
-		expect(humanBoard.checkWinner()).toEqual(true);
+		expect(humanBoard.checkAllShipStatus()).toEqual(true);
 	});
 
 	test(`Testing random ship placement by forcing the random starting 

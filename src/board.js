@@ -172,7 +172,7 @@ class Gameboard {
 		}
 	}
 
-	checkWinner() {
+	checkAllShipStatus() {
 		return this._shipList.every((ship) => ship.isSunk());
 	}
 
