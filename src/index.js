@@ -42,11 +42,11 @@ function restartGame() {
 	initializeGame();
 }
 
-function resetCounters() {
-	for (let i = 0; i < counters.length; i++) {
-		counters[i].textContent = i + 1;
-	}
-}
+radioShipType.forEach((radio) => {
+	radio.addEventListener('click', (e) => {
+		shipType = e.target.id;
+	});
+});
 
 function toggleShipSelect() {
 	const radios = document.querySelectorAll('input[name=shipType]');
@@ -85,25 +85,6 @@ function attemptShipPlacement(id, dir, cell) {
 	}
 }
 
-function listenForShipPlacement() {
-	const cellHuman = document.querySelectorAll('.cellHuman');
-	cellHuman.forEach((cell) => {
-		cell.addEventListener('click', (e) => {
-			attemptShipPlacement(
-				shipType,
-				horizontal.checked,
-				e.target.id.split('_')[1]
-			);
-		});
-	});
-}
-
-radioShipType.forEach((radio) => {
-	radio.addEventListener('click', (e) => {
-		shipType = e.target.id;
-	});
-});
-
 function setUpGame() {
 	humanGameboard = new Board(false);
 	humanPlayer = new Player(false, true);
@@ -137,6 +118,25 @@ function renderHumanBoard() {
 	}
 	gameboardsDiv.append(humanBoardDOM);
 	listenForShipPlacement();
+}
+
+function listenForShipPlacement() {
+	const cellHuman = document.querySelectorAll('.cellHuman');
+	cellHuman.forEach((cell) => {
+		cell.addEventListener('click', (e) => {
+			attemptShipPlacement(
+				shipType,
+				horizontal.checked,
+				e.target.id.split('_')[1]
+			);
+		});
+	});
+}
+
+function resetCounters() {
+	for (let i = 0; i < counters.length; i++) {
+		counters[i].textContent = i + 1;
+	}
 }
 
 function renderComputerBoard() {
