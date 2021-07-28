@@ -14,15 +14,15 @@ class Ship {
 		this._hits.push(cell);
 	}
 
-	get getSize() {
+	get shipSize() {
 		return this._size;
 	}
 
-	get getHits() {
+	get hitsTaken() {
 		return this._hits;
 	}
 
-	get getCellsOccupied() {
+	get cellsOccupied() {
 		return this._cellsOccupied;
 	}
 }
