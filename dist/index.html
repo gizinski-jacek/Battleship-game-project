@@ -9,52 +9,64 @@
 	</head>
 	<body>
 		<div class="main">
-			<div class="controls1">
-				<input
-					type="radio"
-					name="shipType"
-					id="Battleship"
-					autocomplete="off"
-				/>
-				<span class="Battleship">1</span>
-				<label for="Battleship">Battleship</label>
-				<input
-					type="radio"
-					name="shipType"
-					id="Battlecruiser"
-					autocomplete="off"
-				/>
-				<span class="Battlecruiser">2</span>
-				<label for="Battlecruiser">Battlecruiser</label>
-				<input
-					type="radio"
-					name="shipType"
-					id="Destroyer"
-					autocomplete="off"
-				/>
-				<span class="Destroyer">3</span>
-				<label for="Destroyer">Destroyer</label>
-				<input
-					type="radio"
-					name="shipType"
-					id="Cruiser"
-					autocomplete="off"
-				/>
-				<span class="Cruiser">4</span>
-				<label for="Cruiser">Cruiser</label>
-			</div>
-			<div class="controls2">
+			<div class="gameControls">
 				<button id="start">Start</button>
 				<button id="restart">Restart</button>
-				<input
-					type="checkbox"
-					name="direction"
-					id="horizontal"
-					autocomplete="off"
-					checked
-				/><label for="horizontal">Horizontal</label>
 			</div>
-			<div class="gameboards"></div>
+			<div class="game">
+				<div class="gameboards"></div>
+				<div class="shipControls">
+					<div>
+						<input
+							type="radio"
+							name="shipType"
+							id="Battleship"
+							autocomplete="off"
+						/>
+						<span class="Battleship">1</span>
+						<label for="Battleship">Battleship</label>
+					</div>
+					<div>
+						<input
+							type="radio"
+							name="shipType"
+							id="Battlecruiser"
+							autocomplete="off"
+						/>
+						<span class="Battlecruiser">2</span>
+						<label for="Battlecruiser">Battlecruiser</label>
+					</div>
+					<div>
+						<input
+							type="radio"
+							name="shipType"
+							id="Destroyer"
+							autocomplete="off"
+						/>
+						<span class="Destroyer">3</span>
+						<label for="Destroyer">Destroyer</label>
+					</div>
+					<div>
+						<input
+							type="radio"
+							name="shipType"
+							id="Cruiser"
+							autocomplete="off"
+						/>
+						<span class="Cruiser">4</span>
+						<label for="Cruiser">Cruiser</label>
+					</div>
+					<div>
+						<input
+							type="checkbox"
+							name="direction"
+							id="horizontal"
+							autocomplete="off"
+							checked
+						/><label for="horizontal">Horizontal</label>
+					</div>
+				</div>
+			</div>
 		</div>
 		<script src="main.js" type="text/javascript"></script>
 	</body>
