@@ -31,10 +31,14 @@ const lastColumnCells = firstColumnCells.map((x) => x + 9);
 
 class Gameboard {
 	constructor(isAIBoard = false) {
-		this._occupiedCells = [];
-		this._missedShotsCells = [];
-		this._shipList = [];
 		this._isAIBoard = isAIBoard;
+		this._shipList = [];
+		this._occupiedBoardCells = [];
+		this._missedShotsCells = [];
+	}
+
+	randomNumber(range) {
+		return Math.floor(Math.random() * range);
 	}
 
 	placeShip(shipID, isHorizontal, startingCell) {
@@ -55,13 +59,12 @@ class Gameboard {
 			this.checkWallCollisions(newShipCells, isHorizontal) &&
 			this.checkShipCollisions(newShipCells, isHorizontal)
 		) {
-			// No collision, continue
-			this._occupiedCells = this._occupiedCells.concat(newShipCells);
+			this._occupiedBoardCells =
+				this._occupiedBoardCells.concat(newShipCells);
 			const newShip = new Ship(shipTemplate[shipID], newShipCells);
 			this._shipList.push(newShip);
 			return true;
 		} else {
-			// Error: collision
 			return false;
 		}
 	}
@@ -100,10 +103,8 @@ class Gameboard {
 		}
 
 		if (!wallCollisions) {
-			// No collisions found
 			return true;
 		} else {
-			// Collisions found
 			return false;
 		}
 	}
@@ -144,30 +145,24 @@ class Gameboard {
 		}
 		let shipCollisions = undefined;
 		for (let cell of checkCells) {
-			if (this._occupiedCells.includes(cell)) {
+			if (this._occupiedBoardCells.includes(cell)) {
 				shipCollisions = true;
 				break;
 			}
 		}
 
 		if (!shipCollisions) {
-			// No collision found
 			return true;
 		} else {
-			// Collision found
 			return false;
 		}
 	}
 
-	randomNumber(range) {
-		return Math.floor(Math.random() * range);
-	}
-
 	receiveShot(cell) {
 		cell = Number(cell);
-		if (this._occupiedCells.includes(cell)) {
+		if (this._occupiedBoardCells.includes(cell)) {
 			const targetShip = this._shipList.find((ship) =>
-				ship.getCellsOccupied.includes(cell)
+				ship.cellsOccupied.includes(cell)
 			);
 			targetShip.getShot(cell);
 			return true;
@@ -181,20 +176,20 @@ class Gameboard {
 		return this._shipList.every((ship) => ship.isSunk());
 	}
 
-	get getOccupiedCells() {
-		return this._occupiedCells;
+	get isAIBoard() {
+		return this._isAIBoard;
 	}
 
-	get getMissedShotsCells() {
-		return this._missedShotsCells;
-	}
-
-	get getShipList() {
+	get shipList() {
 		return this._shipList;
 	}
 
-	get isAIBoard() {
-		return this._isAIBoard;
+	get occupiedBoardCells() {
+		return this._occupiedBoardCells;
+	}
+
+	get missedShotsCells() {
+		return this._missedShotsCells;
 	}
 }
 
