@@ -12,11 +12,11 @@ describe('Ship Factory functions', () => {
 	});
 
 	test('Correctly returns size', () => {
-		expect(ship1.getSize).toBe(2);
+		expect(ship1.shipSize).toBe(2);
 	});
 
 	test('Correctly returns hits taken', () => {
-		expect(ship1.getHits).toEqual([]);
+		expect(ship1.hitsTaken).toEqual([]);
 	});
 
 	test('Correctly check whether ship is sunk', () => {
@@ -25,9 +25,9 @@ describe('Ship Factory functions', () => {
 
 	test('Correctly registers shot and gets sunk', () => {
 		ship1.getShot(2);
-		expect(ship1.getHits).toEqual([2]);
+		expect(ship1.hitsTaken).toEqual([2]);
 		ship1.getShot(3);
-		expect(ship1.getHits).toEqual([2, 3]);
+		expect(ship1.hitsTaken).toEqual([2, 3]);
 		expect(ship1.isSunk()).toBe(true);
 	});
 });
