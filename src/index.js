@@ -9,7 +9,6 @@ const horizontal = document.getElementById('horizontal');
 const start = document.getElementById('start');
 const restart = document.getElementById('restart');
 const shipControls = document.querySelector('.shipControls');
-const gameboardsDiv = document.querySelector('.gameboards');
 
 let humanGameboard;
 let humanPlayer;
@@ -18,7 +17,9 @@ let computerPlayer;
 let shipType;
 let gameStarted;
 
-start.addEventListener('click', () => {
+start.addEventListener('click', startGame);
+
+function startGame() {
 	if (!gameStarted) {
 		gameStarted = true;
 		const board = document.getElementById('humanBoard');
@@ -30,14 +31,16 @@ start.addEventListener('click', () => {
 		renderComputerBoard();
 		startHumanTurn();
 	}
-});
+}
 
-restart.addEventListener('click', () => {
+restart.addEventListener('click', restartGame);
+
+function restartGame() {
 	gameStarted = false;
 	shipControls.style.display = 'flex';
 	toggleShipSelect();
 	initializeGame();
-});
+}
 
 function resetCounters() {
 	for (let i = 0; i < counters.length; i++) {
@@ -69,28 +72,28 @@ function reduceAvailableShipCounter(shipID) {
 }
 
 function attemptShipPlacement(id, dir, cell) {
-	if (humanGameboard.placeShip(id, dir, cell)) {
-		humanGameboard.placeShip(id, dir, cell);
-		reduceAvailableShipCounter(id);
-		renderHumanBoard();
+	if (id) {
+		if (humanGameboard.placeShip(id, dir, cell)) {
+			humanGameboard.placeShip(id, dir, cell);
+			reduceAvailableShipCounter(id);
+			renderHumanBoard();
+		} else {
+			alert('Incorrect ship placement!');
+		}
 	} else {
-		alert('Incorrect ship placement!');
+		alert('Pick a ship to place!');
 	}
 }
 
-function playerPlaceShips() {
+function listenForShipPlacement() {
 	const cellHuman = document.querySelectorAll('.cellHuman');
 	cellHuman.forEach((cell) => {
 		cell.addEventListener('click', (e) => {
-			if (shipType) {
-				attemptShipPlacement(
-					shipType,
-					horizontal.checked,
-					e.target.id.split('_')[1]
-				);
-			} else {
-				alert('Pick a ship to place!');
-			}
+			attemptShipPlacement(
+				shipType,
+				horizontal.checked,
+				e.target.id.split('_')[1]
+			);
 		});
 	});
 }
@@ -117,7 +120,9 @@ function setUpGame() {
 }
 
 function renderHumanBoard() {
+	const gameboardsDiv = document.querySelector('.gameboards');
 	gameboardsDiv.innerHTML = '';
+
 	const humanBoardDOM = document.createElement('div');
 	humanBoardDOM.id = 'humanBoard';
 	humanBoardDOM.className = 'board';
@@ -131,10 +136,12 @@ function renderHumanBoard() {
 		humanBoardDOM.append(cell);
 	}
 	gameboardsDiv.append(humanBoardDOM);
-	playerPlaceShips();
+	listenForShipPlacement();
 }
 
 function renderComputerBoard() {
+	const gameboardsDiv = document.querySelector('.gameboards');
+
 	const computerBoardDOM = document.createElement('div');
 	computerBoardDOM.id = 'computerBoard';
 	computerBoardDOM.className = 'board';
@@ -150,7 +157,6 @@ function renderComputerBoard() {
 	gameboardsDiv.append(computerBoardDOM);
 }
 
-// Needs refactoring!!
 function startHumanTurn() {
 	const cellsComputer = document.querySelectorAll('.cellComputer');
 	cellsComputer.forEach((cell) => {
@@ -158,44 +164,32 @@ function startHumanTurn() {
 			e.target.classList.add('shot');
 			e.target.removeEventListener('click', click);
 			let cell = e.target.id.split('_')[1];
-			if (computerGameboard.receiveShot(cell)) {
-				computerGameboard.receiveShot(cell);
-				checkGameState(computerGameboard);
+			computerGameboard.receiveShot(cell);
+			if (computerGameboard.checkAllShipStatus()) {
+				if (confirm('You have won! Play again?')) {
+					restartGame();
+				} else {
+					endGameNoRestart();
+				}
 			} else {
-				computerGameboard.receiveShot(cell);
 				startComputerTurn();
 			}
 		});
 	});
 }
 
-function checkGameState(board) {
-	if (board.checkWinner()) {
-		if (board.isAIBoard) {
-			if (confirm('You have won! Play again?')) {
-				initializeGame();
-			} else {
-				endGameNoRestart();
-			}
-		} else {
-			if (confirm('You have lost! Play again?')) {
-				initializeGame();
-			} else {
-				endGameNoRestart();
-			}
-		}
-	}
-}
-
 function startComputerTurn() {
 	const cellsHuman = document.querySelectorAll('.cellHuman');
-	let computerShot;
-	do {
-		computerShot = computerPlayer.takeShot(100);
-		cellsHuman[computerShot].classList.add('shot');
-		humanGameboard.receiveShot();
-	} while (humanGameboard.receiveShot(computerShot));
-	checkGameState(humanGameboard);
+	let computerShot = computerPlayer.takeShot(100);
+	cellsHuman[computerShot].classList.add('shot');
+	humanGameboard.receiveShot();
+	if (humanGameboard.checkAllShipStatus()) {
+		if (confirm('You have lost! Play again?')) {
+			restartGame();
+		} else {
+			endGameNoRestart();
+		}
+	}
 }
 
 function endGameNoRestart() {
@@ -211,3 +205,51 @@ function initializeGame() {
 }
 
 initializeGame();
+
+// function startHumanTurn() {
+// 	const cellsComputer = document.querySelectorAll('.cellComputer');
+// 	cellsComputer.forEach((cell) => {
+// 		cell.addEventListener('click', function click(e) {
+// 			e.target.classList.add('shot');
+// 			e.target.removeEventListener('click', click);
+// 			let cell = e.target.id.split('_')[1];
+// 			computerGameboard.receiveShot(cell);
+// 			if (computerGameboard.receiveShot(cell)) {
+// 				computerGameboard.receiveShot(cell);
+// 				checkWinner(computerGameboard);
+// 			} else {
+// 				computerGameboard.receiveShot(cell);
+// 				startComputerTurn();
+// 			}
+// 		});
+// 	});
+// }
+
+// function checkWinner(board) {
+// 	if (board.checkAllShipStatus()) {
+// 		if (board.isAIBoard) {
+// 			if (confirm('You have won! Play again?')) {
+// 				restartGame();
+// 			} else {
+// 				endGameNoRestart();
+// 			}
+// 		} else {
+// 			if (confirm('You have lost! Play again?')) {
+// 				restartGame();
+// 			} else {
+// 				endGameNoRestart();
+// 			}
+// 		}
+// 	}
+// }
+
+// function startComputerTurn() {
+// 	const cellsHuman = document.querySelectorAll('.cellHuman');
+// 	let computerShot;
+// 	do {
+// 		computerShot = computerPlayer.takeShot(100);
+// 		cellsHuman[computerShot].classList.add('shot');
+// 		humanGameboard.receiveShot();
+// 	} while (humanGameboard.receiveShot(computerShot));
+// 	checkWinner(humanGameboard);
+// }
