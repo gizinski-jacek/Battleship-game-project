@@ -1,6 +1,5 @@
 class Player {
-	constructor(name, isAI = false) {
-		this._name = name;
+	constructor(isAI = false) {
 		this._isAI = isAI;
 		this._shotCells = [];
 	}
@@ -18,11 +17,11 @@ class Player {
 		}
 	}
 
-	get getName() {
-		return this._name;
+	get isAI() {
+		return this._isAI;
 	}
 
-	get getShotCells() {
+	get shotCells() {
 		return this._shotCells;
 	}
 }
