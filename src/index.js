@@ -13,7 +13,6 @@ let humanGameboard;
 let humanPlayer;
 let computerGameboard;
 let computerPlayer;
-let shipName;
 let shipLength;
 let gameStarted;
 
@@ -44,7 +43,6 @@ function restartGame() {
 
 radioShipType.forEach((radio) => {
 	radio.addEventListener('click', (e) => {
-		shipName = e.target.id;
 		shipLength = e.target.value;
 	});
 });
@@ -59,18 +57,21 @@ function toggleShipSelect() {
 	}
 }
 
-function disableShipPick(id) {
-	document.getElementById(id).checked = false;
-	document.getElementById(id).setAttribute('disabled', true);
-	shipName = null;
-	shipLength = null;
+function disableShipPick() {
+	radioShipType.forEach((radio) => {
+		if (radio.checked) {
+			radio.checked = false;
+			radio.setAttribute('disabled', true);
+			shipLength = null;
+		}
+	});
 }
 
-function attemptShipPlacement(name, size, dir, cell) {
-	if (name && size) {
-		if (humanGameboard.placeShip(name, size, dir, cell)) {
-			humanGameboard.placeShip(name, size, dir, cell);
-			disableShipPick(name);
+function attemptShipPlacement(size, dir, cell) {
+	if (size) {
+		if (humanGameboard.placeShip(size, dir, cell)) {
+			humanGameboard.placeShip(size, dir, cell);
+			disableShipPick();
 			renderHumanBoard();
 		} else {
 			alert('Incorrect ship placement!');
@@ -85,7 +86,6 @@ function listenForShipPlacement() {
 	cellHuman.forEach((cell) => {
 		cell.addEventListener('click', (e) => {
 			attemptShipPlacement(
-				shipName,
 				shipLength,
 				horizontal.checked,
 				e.target.id.split('_')[1]
@@ -93,6 +93,11 @@ function listenForShipPlacement() {
 		});
 	});
 }
+
+//////////////////////////////////////////////
+// ToDo: Show shadow of a ship player wants //
+// to place when hovering over board				//
+//////////////////////////////////////////////
 
 function setUpGame() {
 	humanGameboard = new Board(false);
@@ -119,8 +124,8 @@ function renderHumanBoard() {
 	gameboardsDiv.append(humanBoardDOM);
 	listenForShipPlacement();
 }
-
 function initializeComputerBoard() {
+	// radioShipType.forEach((ship) => {});
 	// let i = 0;
 	// while (i < 4) {
 	// 	let shipDirection = computerGameboard.randomNumber(2);
