@@ -127,6 +127,7 @@ function renderHumanBoard() {
 
 function placeComputerShips() {
 	radioShipType.forEach((ship) => {
+		let i = 0;
 		let shipDirection;
 		let shipPlacement;
 		do {
@@ -141,12 +142,14 @@ function placeComputerShips() {
 			) {
 				break;
 			}
+			i++;
 		} while (
 			!computerGameboard.placeShip(
 				ship.value,
 				shipDirection,
 				shipPlacement
-			)
+			) ||
+			i < 100
 		);
 	});
 }
