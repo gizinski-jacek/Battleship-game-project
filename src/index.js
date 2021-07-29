@@ -4,7 +4,6 @@ import Player from './player';
 import Board from './board';
 
 const radioShipType = document.getElementsByName('shipType');
-const counters = document.getElementsByTagName('span');
 const horizontal = document.getElementById('horizontal');
 const start = document.getElementById('start');
 const restart = document.getElementById('restart');
@@ -14,7 +13,8 @@ let humanGameboard;
 let humanPlayer;
 let computerGameboard;
 let computerPlayer;
-let shipType;
+let shipName;
+let shipLength;
 let gameStarted;
 
 start.addEventListener('click', startGame);
@@ -28,7 +28,7 @@ function startGame() {
 		shipControls.style.display = 'none';
 		horizontal.disabled = gameStarted;
 		toggleShipSelect();
-		renderComputerBoard();
+		initializeComputerBoard();
 		startHumanTurn();
 	}
 }
@@ -44,7 +44,8 @@ function restartGame() {
 
 radioShipType.forEach((radio) => {
 	radio.addEventListener('click', (e) => {
-		shipType = e.target.id;
+		shipName = e.target.id;
+		shipLength = e.target.value;
 	});
 });
 
@@ -58,24 +59,18 @@ function toggleShipSelect() {
 	}
 }
 
-function reduceAvailableShipCounter(shipID) {
-	for (let count of counters) {
-		if (count.className === shipID && count.textContent > 0) {
-			count.textContent = count.textContent - 1;
-			if (count.textContent <= 0) {
-				document.getElementById(shipID).checked = false;
-				document.getElementById(shipID).setAttribute('disabled', true);
-				shipType = null;
-			}
-		}
-	}
+function disableShipPick(id) {
+	document.getElementById(id).checked = false;
+	document.getElementById(id).setAttribute('disabled', true);
+	shipName = null;
+	shipLength = null;
 }
 
-function attemptShipPlacement(id, dir, cell) {
-	if (id) {
-		if (humanGameboard.placeShip(id, dir, cell)) {
-			humanGameboard.placeShip(id, dir, cell);
-			reduceAvailableShipCounter(id);
+function attemptShipPlacement(name, size, dir, cell) {
+	if (name && size) {
+		if (humanGameboard.placeShip(name, size, dir, cell)) {
+			humanGameboard.placeShip(name, size, dir, cell);
+			disableShipPick(name);
 			renderHumanBoard();
 		} else {
 			alert('Incorrect ship placement!');
@@ -85,25 +80,30 @@ function attemptShipPlacement(id, dir, cell) {
 	}
 }
 
+function listenForShipPlacement() {
+	const cellHuman = document.querySelectorAll('.cellHuman');
+	cellHuman.forEach((cell) => {
+		cell.addEventListener('click', (e) => {
+			attemptShipPlacement(
+				shipName,
+				shipLength,
+				horizontal.checked,
+				e.target.id.split('_')[1]
+			);
+		});
+	});
+}
+
 function setUpGame() {
 	humanGameboard = new Board(false);
 	humanPlayer = new Player(false, true);
 	computerGameboard = new Board(true);
 	computerPlayer = new Player('EasyAI', true, false);
-	computerGameboard.placeShip('Battleship');
-	computerGameboard.placeShip('Battlecruiser');
-	computerGameboard.placeShip('Destroyer');
-	computerGameboard.placeShip('Cruiser');
-
-	/////////////////////////////////////////////
-	// Do a loop here placing all ships for AI //
-	/////////////////////////////////////////////
 }
 
 function renderHumanBoard() {
 	const gameboardsDiv = document.querySelector('.gameboards');
 	gameboardsDiv.innerHTML = '';
-
 	const humanBoardDOM = document.createElement('div');
 	humanBoardDOM.id = 'humanBoard';
 	humanBoardDOM.className = 'board';
@@ -120,28 +120,31 @@ function renderHumanBoard() {
 	listenForShipPlacement();
 }
 
-function listenForShipPlacement() {
-	const cellHuman = document.querySelectorAll('.cellHuman');
-	cellHuman.forEach((cell) => {
-		cell.addEventListener('click', (e) => {
-			attemptShipPlacement(
-				shipType,
-				horizontal.checked,
-				e.target.id.split('_')[1]
-			);
-		});
-	});
-}
+function initializeComputerBoard() {
+	// computerGameboard.placeShip('Battleship');
+	// computerGameboard.placeShip('Battlecruiser');
+	// computerGameboard.placeShip('Destroyer');
+	// computerGameboard.placeShip('Cruiser');
 
-function resetCounters() {
-	for (let i = 0; i < counters.length; i++) {
-		counters[i].textContent = i + 1;
-	}
-}
+	// let i = 0;
+	// while (i < 4) {
+	// 	let shipDirection = computerGameboard.randomNumber(2);
+	// 	let shipPlacement = computerGameboard.randomNumber(100);
+	// 	console.log(shipDirection, 333 + 'x');
+	// 	console.log(shipPlacement, 5555 + 'x');
+	// 	if (
+	// 		computerGameboard.placeShip('Cruiser', shipDirection, shipPlacement)
+	// 	) {
+	// 		computerGameboard.placeShip(
+	// 			'Cruiser',
+	// 			shipDirection,
+	// 			shipPlacement
+	// 		);
+	// 		i++;
+	// 	}
+	// }
 
-function renderComputerBoard() {
 	const gameboardsDiv = document.querySelector('.gameboards');
-
 	const computerBoardDOM = document.createElement('div');
 	computerBoardDOM.id = 'computerBoard';
 	computerBoardDOM.className = 'board';
@@ -201,7 +204,6 @@ function endGameNoRestart() {
 function initializeGame() {
 	setUpGame();
 	renderHumanBoard();
-	resetCounters();
 }
 
 initializeGame();
