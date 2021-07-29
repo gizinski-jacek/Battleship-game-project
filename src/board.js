@@ -22,7 +22,6 @@ class Gameboard {
 	}
 
 	placeShip(shipSize, isHorizontal, startingCell) {
-		console.log(shipSize);
 		startingCell = Number(startingCell);
 		const newShipCells = this.calculateShipPlacement(
 			shipSize,
@@ -37,7 +36,6 @@ class Gameboard {
 				this._occupiedBoardCells.concat(newShipCells);
 			const newShip = new Ship(shipSize, newShipCells);
 			this._shipList.push(newShip);
-			console.log(this._shipList);
 			return true;
 		} else {
 			return false;
