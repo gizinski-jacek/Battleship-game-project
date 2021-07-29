@@ -22,6 +22,9 @@ class Gameboard {
 	}
 
 	placeShip(shipSize, isHorizontal, startingCell) {
+		if (this._occupiedBoardCells.includes(startingCell)) {
+			return false;
+		}
 		startingCell = Number(startingCell);
 		const newShipCells = this.calculateShipPlacement(
 			shipSize,
@@ -32,8 +35,7 @@ class Gameboard {
 			this.checkWallCollisions(newShipCells, isHorizontal) &&
 			this.checkShipCollisions(newShipCells, isHorizontal)
 		) {
-			this._occupiedBoardCells =
-				this._occupiedBoardCells.concat(newShipCells);
+			this._occupiedBoardCells.concat(newShipCells);
 			const newShip = new Ship(shipSize, newShipCells);
 			this._shipList.push(newShip);
 			return true;
