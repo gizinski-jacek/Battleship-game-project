@@ -1,7 +1,7 @@
 class Ship {
-	constructor(size, array) {
+	constructor(size, position) {
 		this._size = size;
-		this._cellsOccupied = array;
+		this._cellsOccupied = position;
 		this._hits = [];
 	}
 
