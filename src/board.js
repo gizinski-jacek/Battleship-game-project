@@ -1,24 +1,5 @@
 const Ship = require('./ship');
 
-const shipTemplate = {
-	Cruiser: {
-		name: 'Cruiser',
-		size: 2,
-	},
-	Destroyer: {
-		name: 'Destroyer',
-		size: 3,
-	},
-	Battlecruiser: {
-		name: 'Battlecruiser',
-		size: 4,
-	},
-	Battleship: {
-		name: 'Battleship',
-		size: 5,
-	},
-};
-
 // Array of numbers from 1 to 9
 const arrayRange = Array.from({ length: 10 }, (x, y) => y);
 
@@ -31,7 +12,6 @@ const lastColumnCells = firstColumnCells.map((x) => x + 9);
 
 class Gameboard {
 	constructor(isAIBoard = false) {
-		this._isAIBoard = isAIBoard;
 		this._shipList = [];
 		this._occupiedBoardCells = [];
 		this._missedShotsCells = [];
@@ -41,17 +21,11 @@ class Gameboard {
 		return Math.floor(Math.random() * range);
 	}
 
-	placeShip(shipID, isHorizontal, startingCell) {
-		if (!shipID) {
-			return false;
-		}
+	placeShip(shipName, shipSize, isHorizontal, startingCell) {
+		// console.log(shipTemplate[2]);
 		startingCell = Number(startingCell);
-		if (this._isAIBoard) {
-			isHorizontal = this.randomNumber(2);
-			startingCell = this.randomNumber(100);
-		}
 		const newShipCells = this.calculateShipPlacement(
-			shipTemplate[shipID].size,
+			shipSize,
 			isHorizontal,
 			startingCell
 		);
@@ -61,8 +35,9 @@ class Gameboard {
 		) {
 			this._occupiedBoardCells =
 				this._occupiedBoardCells.concat(newShipCells);
-			const newShip = new Ship(shipTemplate[shipID], newShipCells);
+			const newShip = new Ship(shipName, shipSize, newShipCells);
 			this._shipList.push(newShip);
+			console.log(this._shipList);
 			return true;
 		} else {
 			return false;
@@ -174,10 +149,6 @@ class Gameboard {
 
 	checkAllShipStatus() {
 		return this._shipList.every((ship) => ship.isSunk());
-	}
-
-	get isAIBoard() {
-		return this._isAIBoard;
 	}
 
 	get shipList() {
