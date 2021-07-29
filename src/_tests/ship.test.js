@@ -3,11 +3,10 @@ const Ship = require('../ship');
 describe('Ship Factory functions', () => {
 	let ship1;
 	test('Creates ship correctly', () => {
-		expect((ship1 = new Ship({ name: 'S', size: 2 }, [2, 3]))).toEqual({
-			_name: 'S',
+		expect((ship1 = new Ship(2, [2, 3]))).toEqual({
 			_size: 2,
-			_hits: [],
 			_cellsOccupied: [2, 3],
+			_hits: [],
 		});
 	});
 
