@@ -21,8 +21,8 @@ class Gameboard {
 		return Math.floor(Math.random() * range);
 	}
 
-	placeShip(shipName, shipSize, isHorizontal, startingCell) {
-		// console.log(shipTemplate[2]);
+	placeShip(shipSize, isHorizontal, startingCell) {
+		console.log(shipSize);
 		startingCell = Number(startingCell);
 		const newShipCells = this.calculateShipPlacement(
 			shipSize,
@@ -35,7 +35,7 @@ class Gameboard {
 		) {
 			this._occupiedBoardCells =
 				this._occupiedBoardCells.concat(newShipCells);
-			const newShip = new Ship(shipName, shipSize, newShipCells);
+			const newShip = new Ship(shipSize, newShipCells);
 			this._shipList.push(newShip);
 			console.log(this._shipList);
 			return true;
