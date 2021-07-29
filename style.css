@@ -70,7 +70,6 @@ button {
 	justify-content: left;
 }
 
-span,
 input {
 	background-color: rgb(251, 255, 0);
 	font-size: 0.75rem;
@@ -85,8 +84,7 @@ label {
 }
 
 input,
-label,
-span {
+label {
 	user-select: none;
 }
 
