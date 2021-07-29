@@ -11,7 +11,7 @@ const firstColumnCells = arrayRange.map((x) => x * 10);
 const lastColumnCells = firstColumnCells.map((x) => x + 9);
 
 class Gameboard {
-	constructor(isAIBoard = false) {
+	constructor() {
 		this._shipList = [];
 		this._occupiedBoardCells = [];
 		this._missedShotsCells = [];

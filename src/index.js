@@ -121,11 +121,6 @@ function renderHumanBoard() {
 }
 
 function initializeComputerBoard() {
-	// computerGameboard.placeShip('Battleship');
-	// computerGameboard.placeShip('Battlecruiser');
-	// computerGameboard.placeShip('Destroyer');
-	// computerGameboard.placeShip('Cruiser');
-
 	// let i = 0;
 	// while (i < 4) {
 	// 	let shipDirection = computerGameboard.randomNumber(2);
@@ -207,51 +202,3 @@ function initializeGame() {
 }
 
 initializeGame();
-
-// function startHumanTurn() {
-// 	const cellsComputer = document.querySelectorAll('.cellComputer');
-// 	cellsComputer.forEach((cell) => {
-// 		cell.addEventListener('click', function click(e) {
-// 			e.target.classList.add('shot');
-// 			e.target.removeEventListener('click', click);
-// 			let cell = e.target.id.split('_')[1];
-// 			computerGameboard.receiveShot(cell);
-// 			if (computerGameboard.receiveShot(cell)) {
-// 				computerGameboard.receiveShot(cell);
-// 				checkWinner(computerGameboard);
-// 			} else {
-// 				computerGameboard.receiveShot(cell);
-// 				startComputerTurn();
-// 			}
-// 		});
-// 	});
-// }
-
-// function checkWinner(board) {
-// 	if (board.checkAllShipStatus()) {
-// 		if (board.isAIBoard) {
-// 			if (confirm('You have won! Play again?')) {
-// 				restartGame();
-// 			} else {
-// 				endGameNoRestart();
-// 			}
-// 		} else {
-// 			if (confirm('You have lost! Play again?')) {
-// 				restartGame();
-// 			} else {
-// 				endGameNoRestart();
-// 			}
-// 		}
-// 	}
-// }
-
-// function startComputerTurn() {
-// 	const cellsHuman = document.querySelectorAll('.cellHuman');
-// 	let computerShot;
-// 	do {
-// 		computerShot = computerPlayer.takeShot(100);
-// 		cellsHuman[computerShot].classList.add('shot');
-// 		humanGameboard.receiveShot();
-// 	} while (humanGameboard.receiveShot(computerShot));
-// 	checkWinner(humanGameboard);
-// }
