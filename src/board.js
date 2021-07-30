@@ -35,7 +35,8 @@ class Gameboard {
 			this.checkWallCollisions(newShipCells, isHorizontal) &&
 			this.checkShipCollisions(newShipCells, isHorizontal)
 		) {
-			this._occupiedBoardCells.concat(newShipCells);
+			this._occupiedBoardCells =
+				this._occupiedBoardCells.concat(newShipCells);
 			const newShip = new Ship(shipSize, newShipCells);
 			this._shipList.push(newShip);
 			return true;
