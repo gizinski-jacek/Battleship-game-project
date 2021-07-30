@@ -3,18 +3,19 @@
 import Player from './player';
 import Board from './board';
 
-const radioShipType = document.getElementsByName('shipType');
+const shipTypes = document.getElementsByName('shipType');
 const horizontal = document.getElementById('horizontal');
 const start = document.getElementById('start');
 const restart = document.getElementById('restart');
 const shipControls = document.querySelector('.shipControls');
+const gameboardsDiv = document.querySelector('.gameboards');
 
 let humanGameboard;
 let humanPlayer;
 let computerGameboard;
 let computerPlayer;
-let shipLength;
 let gameStarted;
+let shipLength = document.querySelector('input[name=shipType]:checked').value;
 
 start.addEventListener('click', startGame);
 
@@ -25,8 +26,7 @@ function startGame() {
 		let boardClone = board.cloneNode(true);
 		board.parentNode.replaceChild(boardClone, board);
 		shipControls.style.display = 'none';
-		horizontal.disabled = gameStarted;
-		toggleShipSelect();
+		toggleShipMenu();
 		placeComputerShips();
 		renderComputerBoard();
 		startHumanTurn();
@@ -38,42 +38,67 @@ restart.addEventListener('click', restartGame);
 function restartGame() {
 	gameStarted = false;
 	shipControls.style.display = 'flex';
-	toggleShipSelect();
+	toggleShipMenu();
 	initializeGame();
 }
 
-radioShipType.forEach((radio) => {
+shipTypes.forEach((radio) => {
 	radio.addEventListener('click', (e) => {
 		shipLength = e.target.value;
 	});
 });
 
-function toggleShipSelect() {
+function toggleShipMenu() {
 	const radios = document.querySelectorAll('input[name=shipType]');
 	for (let i = 0; i < radios.length; i++) {
 		radios[i].checked = false;
 		radios[i].disabled = gameStarted;
-		horizontal.checked = true;
 		horizontal.disabled = gameStarted;
+		shipLength = null;
+	}
+	if (!gameStarted) {
+		radios[0].checked = true;
+		radios[0].disabled = gameStarted;
+		horizontal.checked = true;
+		shipLength = radios[0].value;
 	}
 }
 
-function disableShipOption() {
-	radioShipType.forEach((radio) => {
-		if (radio.checked) {
-			radio.checked = false;
-			radio.setAttribute('disabled', true);
-			shipLength = null;
+function nextShipOption() {
+	for (let [index, radio] of shipTypes.entries()) {
+		if (!radio.disabled) {
+			if (radio.checked) {
+				radio.checked = false;
+				radio.disabled = true;
+				const disRads = document.querySelectorAll(
+					'input[name=shipType]:disabled'
+				);
+				if (disRads.length === shipTypes.length) {
+					////////////////////////////////////////////////
+					//	WHY DOESNT THIS RENDER AI BOARD PROPERLY	//
+					////////////////////////////////////////////////
+					startGame();
+					break;
+				}
+				do {
+					index++;
+					if (index >= shipTypes.length) {
+						index = 0;
+					}
+				} while (shipTypes[index].disabled);
+				shipTypes[index].checked = true;
+				shipLength = shipTypes[index].value;
+				break;
+			}
 		}
-	});
+	}
 }
 
 function attemptShipPlacement(size, dir, cell) {
 	if (size) {
 		if (humanGameboard.placeShip(size, dir, cell)) {
-			disableShipOption();
+			nextShipOption();
 			renderHumanBoard();
-			hoverShowShip();
 		} else {
 			alert('Incorrect ship placement!');
 		}
@@ -102,6 +127,7 @@ function hoverShowShip() {
 						horizontal.checked,
 						index
 					);
+					shipCells = shipCells.filter((x) => x < 100);
 					shipCells.forEach((cell) => {
 						cellHuman[cell].classList.add('hoverShip');
 					});
@@ -111,7 +137,7 @@ function hoverShowShip() {
 						horizontal.checked,
 						index
 					);
-					shipCells = shipCells.filter((x) => x < 99);
+					shipCells = shipCells.filter((x) => x < 100);
 					shipCells.forEach((cell) => {
 						cellHuman[cell].classList.add('hoverShip');
 					});
@@ -134,14 +160,12 @@ function setUpGame() {
 }
 
 function renderHumanBoard() {
-	const gameboardsDiv = document.querySelector('.gameboards');
 	gameboardsDiv.innerHTML = '';
 	const humanBoardDOM = document.createElement('div');
 	humanBoardDOM.id = 'humanBoard';
 	humanBoardDOM.className = 'board';
 	for (let i = 0; i < 100; i++) {
 		let cell = document.createElement('div');
-		cell.id = 'p_' + i;
 		cell.classList.add('cellHuman');
 		if (humanGameboard.occupiedBoardCells.includes(i)) {
 			cell.classList.add('ship');
@@ -150,10 +174,11 @@ function renderHumanBoard() {
 	}
 	gameboardsDiv.append(humanBoardDOM);
 	listenForShipPlacement();
+	hoverShowShip();
 }
 
 function placeComputerShips() {
-	radioShipType.forEach((ship) => {
+	shipTypes.forEach((ship) => {
 		let i = 0;
 		let shipDirection;
 		let shipPlacement;
@@ -182,17 +207,15 @@ function placeComputerShips() {
 }
 
 function renderComputerBoard() {
-	const gameboardsDiv = document.querySelector('.gameboards');
 	const computerBoardDOM = document.createElement('div');
 	computerBoardDOM.id = 'computerBoard';
 	computerBoardDOM.className = 'board';
 	for (let i = 0; i < 100; i++) {
 		let cell = document.createElement('div');
-		cell.id = 'c_' + i;
 		cell.classList.add('cellComputer');
 		computerBoardDOM.append(cell);
 	}
-	gameboardsDiv.append(computerBoardDOM);
+	gameboardsDiv.appendChild(computerBoardDOM);
 }
 
 function startHumanTurn() {
@@ -240,7 +263,6 @@ function endGameNoRestart() {
 function initializeGame() {
 	setUpGame();
 	renderHumanBoard();
-	hoverShowShip();
 }
 
 initializeGame();
