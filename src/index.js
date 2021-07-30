@@ -58,7 +58,7 @@ function toggleShipSelect() {
 	}
 }
 
-function disableShipPick() {
+function disableShipOption() {
 	radioShipType.forEach((radio) => {
 		if (radio.checked) {
 			radio.checked = false;
@@ -71,7 +71,7 @@ function disableShipPick() {
 function attemptShipPlacement(size, dir, cell) {
 	if (size) {
 		if (humanGameboard.placeShip(size, dir, cell)) {
-			disableShipPick();
+			disableShipOption();
 			renderHumanBoard();
 		} else {
 			alert('Incorrect ship placement!');
@@ -101,9 +101,9 @@ function listenForShipPlacement() {
 
 function setUpGame() {
 	humanGameboard = new Board(false);
-	humanPlayer = new Player(false, true);
+	humanPlayer = new Player(false);
 	computerGameboard = new Board(true);
-	computerPlayer = new Player('EasyAI', true, false);
+	computerPlayer = new Player(true);
 }
 
 function renderHumanBoard() {
