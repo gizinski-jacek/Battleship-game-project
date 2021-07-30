@@ -190,9 +190,6 @@ function renderComputerBoard() {
 		let cell = document.createElement('div');
 		cell.id = 'c_' + i;
 		cell.classList.add('cellComputer');
-		if (computerGameboard.occupiedBoardCells.includes(i)) {
-			cell.classList.add('ship');
-		}
 		computerBoardDOM.append(cell);
 	}
 	gameboardsDiv.append(computerBoardDOM);
@@ -204,7 +201,9 @@ function startHumanTurn() {
 		cell.addEventListener('click', function click(e) {
 			e.target.classList.add('shot');
 			e.target.removeEventListener('click', click);
-			computerGameboard.receiveShot(index);
+			if (computerGameboard.receiveShot(index)) {
+				cell.classList.add('ship');
+			}
 			if (computerGameboard.checkAllShipStatus()) {
 				if (confirm('You have won! Play again?')) {
 					restartGame();
