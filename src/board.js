@@ -39,7 +39,6 @@ class Gameboard {
 			this._occupiedBoardCells =
 				this._occupiedBoardCells.concat(newShipCells);
 			const newShip = new Ship(shipSize, newShipCells);
-			console.log(newShip);
 			this._shipList.push(newShip);
 			return true;
 		} else {
