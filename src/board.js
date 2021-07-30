@@ -26,6 +26,7 @@ class Gameboard {
 			return false;
 		}
 		shipSize = Number(shipSize);
+		startingCell = Number(startingCell);
 		const newShipCells = this.calculateShipPlacement(
 			shipSize,
 			isHorizontal,
@@ -136,6 +137,7 @@ class Gameboard {
 	}
 
 	receiveShot(cell) {
+		cell = Number(cell);
 		if (this._occupiedBoardCells.includes(cell)) {
 			const targetShip = this._shipList.find((ship) =>
 				ship.cellsOccupied.includes(cell)
