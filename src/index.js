@@ -73,6 +73,7 @@ function attemptShipPlacement(size, dir, cell) {
 		if (humanGameboard.placeShip(size, dir, cell)) {
 			disableShipOption();
 			renderHumanBoard();
+			hoverShowShip();
 		} else {
 			alert('Incorrect ship placement!');
 		}
@@ -83,21 +84,47 @@ function attemptShipPlacement(size, dir, cell) {
 
 function listenForShipPlacement() {
 	const cellHuman = document.querySelectorAll('.cellHuman');
-	cellHuman.forEach((cell) => {
-		cell.addEventListener('click', (e) => {
-			attemptShipPlacement(
-				shipLength,
-				horizontal.checked,
-				e.target.id.split('_')[1]
-			);
+	cellHuman.forEach((cell, index) => {
+		cell.addEventListener('click', () => {
+			attemptShipPlacement(shipLength, horizontal.checked, index);
 		});
 	});
 }
 
-//////////////////////////////////////////////
-// ToDo: Show shadow of a ship player wants //
-// to place when hovering over board				//
-//////////////////////////////////////////////
+function hoverShowShip() {
+	const cellHuman = document.querySelectorAll('.cellHuman');
+	cellHuman.forEach((cell, index) => {
+		cell.addEventListener('mouseenter', () => {
+			if (shipLength) {
+				if (horizontal.checked) {
+					let shipCells = humanGameboard.calculateShipPlacement(
+						shipLength,
+						horizontal.checked,
+						index
+					);
+					shipCells.forEach((cell) => {
+						cellHuman[cell].classList.add('hoverShip');
+					});
+				} else {
+					let shipCells = humanGameboard.calculateShipPlacement(
+						shipLength,
+						horizontal.checked,
+						index
+					);
+					shipCells = shipCells.filter((x) => x < 99);
+					shipCells.forEach((cell) => {
+						cellHuman[cell].classList.add('hoverShip');
+					});
+				}
+			}
+		});
+		cell.addEventListener('mouseleave', () => {
+			cellHuman.forEach((cell) => {
+				cell.classList.remove('hoverShip');
+			});
+		});
+	});
+}
 
 function setUpGame() {
 	humanGameboard = new Board(false);
@@ -173,12 +200,11 @@ function renderComputerBoard() {
 
 function startHumanTurn() {
 	const cellsComputer = document.querySelectorAll('.cellComputer');
-	cellsComputer.forEach((cell) => {
+	cellsComputer.forEach((cell, index) => {
 		cell.addEventListener('click', function click(e) {
 			e.target.classList.add('shot');
 			e.target.removeEventListener('click', click);
-			let cell = e.target.id.split('_')[1];
-			computerGameboard.receiveShot(cell);
+			computerGameboard.receiveShot(index);
 			if (computerGameboard.checkAllShipStatus()) {
 				if (confirm('You have won! Play again?')) {
 					restartGame();
@@ -215,6 +241,7 @@ function endGameNoRestart() {
 function initializeGame() {
 	setUpGame();
 	renderHumanBoard();
+	hoverShowShip();
 }
 
 initializeGame();
