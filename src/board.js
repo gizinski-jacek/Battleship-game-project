@@ -61,7 +61,7 @@ class Gameboard {
 		if (isHor && wallCollisions === undefined) {
 			let testCells = shipCells.slice(1);
 			for (let i = 1; i < 11; i++) {
-				for (let cell of testCells) {
+				for (const cell of testCells) {
 					if (cell === 11 * i - i) {
 						wallCollisions = true;
 						break;
@@ -119,7 +119,7 @@ class Gameboard {
 			}
 		}
 		let shipCollisions = undefined;
-		for (let cell of checkCells) {
+		for (const cell of checkCells) {
 			if (this._occupiedBoardCells.includes(cell)) {
 				shipCollisions = true;
 				break;
