@@ -14,7 +14,7 @@ let humanGameboard;
 let humanPlayer;
 let computerGameboard;
 let computerPlayer;
-let gameStarted;
+let gameStarted = false;
 let shipLength = document.querySelector('input[name=shipType]:checked').value;
 
 start.addEventListener('click', startGame);
@@ -23,7 +23,7 @@ function startGame() {
 	if (!gameStarted) {
 		gameStarted = true;
 		const board = document.getElementById('humanBoard');
-		let boardClone = board.cloneNode(true);
+		const boardClone = board.cloneNode(true);
 		board.parentNode.replaceChild(boardClone, board);
 		shipControls.style.display = 'none';
 		toggleShipMenu();
@@ -66,20 +66,16 @@ function toggleShipMenu() {
 
 function nextShipOption() {
 	for (let [index, radio] of shipTypes.entries()) {
-		if (!radio.disabled) {
-			if (radio.checked) {
-				radio.checked = false;
-				radio.disabled = true;
-				const disRads = document.querySelectorAll(
-					'input[name=shipType]:disabled'
-				);
-				if (disRads.length === shipTypes.length) {
-					////////////////////////////////////////////////
-					//	WHY DOESNT THIS RENDER AI BOARD PROPERLY	//
-					////////////////////////////////////////////////
-					startGame();
-					break;
-				}
+		if (radio.checked && !radio.disabled) {
+			radio.checked = false;
+			radio.disabled = true;
+			const disRads = document.querySelectorAll(
+				'input[name=shipType]:disabled'
+			);
+			if (disRads.length === shipTypes.length) {
+				startGame();
+				break;
+			} else {
 				do {
 					index++;
 					if (index >= shipTypes.length) {
@@ -221,9 +217,9 @@ function renderComputerBoard() {
 function startHumanTurn() {
 	const cellsComputer = document.querySelectorAll('.cellComputer');
 	cellsComputer.forEach((cell, index) => {
-		cell.addEventListener('click', function click(e) {
+		cell.addEventListener('click', function humanShot(e) {
 			e.target.classList.add('shot');
-			e.target.removeEventListener('click', click);
+			e.target.removeEventListener('click', humanShot);
 			if (computerGameboard.receiveShot(index)) {
 				cell.classList.add('ship');
 			}
