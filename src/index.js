@@ -73,7 +73,12 @@ function nextShipOption() {
 				'input[name=shipType]:disabled'
 			);
 			if (disRads.length === shipTypes.length) {
-				startGame();
+				// Can't figure out the problem with toggling the ship menu
+				// and starting the game when all ships were placed.
+				// Does neither clone the human board to remove listeners
+				// on human board (25) or render the AI board (208).
+				// startGame();
+				shipLength = null;
 				break;
 			} else {
 				do {
