@@ -2,4 +2,4 @@
 
 Battleship game project build following The Odin Project curriculum on TDD using basics of unit testing with Jest.
 
-##### This project is being actively worked on. Major changes and new code introductions should be expected.
+##### This project is mostly finished. Might rebuild it in the future for practicing React.
