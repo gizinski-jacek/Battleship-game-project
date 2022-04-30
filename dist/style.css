@@ -3,6 +3,10 @@
 	font-size: 16px;
 }
 
+* {
+	box-sizing: border-box;
+}
+
 body {
 	height: 100vh;
 	background-color: rgb(150, 150, 150);
@@ -14,7 +18,6 @@ body {
 	align-items: center;
 	height: 100%;
 	font-size: 1.25rem;
-	margin: 2rem;
 }
 
 .gameControls {
@@ -141,4 +144,31 @@ label {
 
 .ship.shot {
 	background-color: rgb(225, 0, 0);
+}
+
+.footer {
+	position: absolute;
+	bottom: 0;
+	width: 100%;
+	text-align: center;
+	background-color: rgb(0, 0, 0);
+}
+
+.footer a {
+	font-weight: 600;
+	color: rgb(255, 255, 255);
+	padding: 4px;
+	float: right;
+	display: flex;
+	align-items: center;
+	text-decoration: none;
+}
+
+.footer svg {
+	margin: 0 8px;
+	box-sizing: content-box;
+	border-radius: 50%;
+	padding: 1px;
+	background-color: rgb(255, 255, 255);
+	fill: rgb(0, 0, 0);
 }
