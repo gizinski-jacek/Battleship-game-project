@@ -162,6 +162,8 @@ function setUpGame() {
 
 function renderHumanBoard() {
 	gameboardsDiv.innerHTML = '';
+	const container = document.createElement('div');
+	container.className = 'container';
 	const humanBoardDOM = document.createElement('div');
 	humanBoardDOM.id = 'humanBoard';
 	humanBoardDOM.className = 'board';
@@ -173,7 +175,13 @@ function renderHumanBoard() {
 		}
 		humanBoardDOM.append(cell);
 	}
-	gameboardsDiv.append(humanBoardDOM);
+
+	const boardTitle = document.createElement('span');
+	boardTitle.textContent = 'Your Board';
+
+	container.appendChild(boardTitle);
+	container.append(humanBoardDOM);
+	gameboardsDiv.appendChild(container);
 	listenForShipPlacement();
 	hoverShowShip();
 }
@@ -187,27 +195,21 @@ function placeComputerShips() {
 			shipDirection = computerGameboard.randomNumber(2);
 			shipPlacement = computerGameboard.randomNumber(100);
 			if (
-				computerGameboard.placeShip(
-					ship.value,
-					shipDirection,
-					shipPlacement
-				)
+				computerGameboard.placeShip(ship.value, shipDirection, shipPlacement)
 			) {
 				break;
 			}
 			i++;
 		} while (
-			!computerGameboard.placeShip(
-				ship.value,
-				shipDirection,
-				shipPlacement
-			) ||
+			!computerGameboard.placeShip(ship.value, shipDirection, shipPlacement) ||
 			i < 100
 		);
 	});
 }
 
 function renderComputerBoard() {
+	const container = document.createElement('div');
+	container.className = 'container';
 	const computerBoardDOM = document.createElement('div');
 	computerBoardDOM.id = 'computerBoard';
 	computerBoardDOM.className = 'board';
@@ -216,7 +218,12 @@ function renderComputerBoard() {
 		cell.classList.add('cellComputer');
 		computerBoardDOM.append(cell);
 	}
-	gameboardsDiv.appendChild(computerBoardDOM);
+	const boardTitle = document.createElement('span');
+	boardTitle.textContent = 'Enemy Board';
+
+	container.appendChild(boardTitle);
+	container.append(computerBoardDOM);
+	gameboardsDiv.appendChild(container);
 }
 
 function startHumanTurn() {
