@@ -74,13 +74,17 @@ button:hover {
 	margin: 1.5rem;
 	border: 2px solid rgb(0, 0, 0);
 	box-sizing: border-box;
+	background: linear-gradient(
+		rgb(0, 175, 220),
+		rgb(0, 150, 200),
+		rgb(0, 125, 165)
+	);
 }
 
 .cellHuman,
 .cellComputer {
 	height: 2.5rem;
 	width: 2.5rem;
-	background-color: rgb(0, 150, 200);
 	border: 1px solid rgb(0, 0, 0);
 	user-select: none;
 }
@@ -101,7 +105,7 @@ button:hover {
 	display: flex;
 	flex-direction: column;
 	margin: 1.5rem;
-	background-color: rgb(0, 225, 175);
+	background: linear-gradient(rgb(0, 210, 165), rgb(0, 190, 150));
 	border: 2px solid rgb(0, 0, 0);
 	height: fit-content;
 }
