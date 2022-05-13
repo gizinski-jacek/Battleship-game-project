@@ -20,6 +20,10 @@ let shipLength = document.querySelector('input[name=shipType]:checked').value;
 start.addEventListener('click', startGame);
 
 function startGame() {
+	if (humanGameboard.shipList.length !== shipTypes.length) {
+		alert('You have some ships left to place!');
+		return;
+	}
 	if (!gameStarted) {
 		gameStarted = true;
 		const board = document.getElementById('humanBoard');
@@ -73,11 +77,6 @@ function nextShipOption() {
 				'input[name=shipType]:disabled'
 			);
 			if (disRads.length === shipTypes.length) {
-				// Can't figure out the problem with toggling the ship menu
-				// and starting the game when all ships were placed.
-				// Does neither clone the human board to remove listeners
-				// on human board (25) or render the AI board (208).
-				// startGame();
 				shipLength = null;
 				break;
 			} else {
@@ -100,6 +99,10 @@ function attemptShipPlacement(size, dir, cell) {
 		if (humanGameboard.placeShip(size, dir, cell)) {
 			nextShipOption();
 			renderHumanBoard();
+			let array = Array.from(shipTypes);
+			if (array.every((ship) => ship.disabled == true)) {
+				startGame();
+			}
 		} else {
 			alert('Incorrect ship placement!');
 		}
