@@ -1,13 +1,13 @@
 const Ship = require('./ship');
 
-// Array of numbers from 1 to 9
+// Array of numbers from 0 to 9
 const arrayRange = Array.from({ length: 10 }, (x, y) => y);
 
-// Used to check whether ships first cell starts on a cell in first column.
-// It it does then it doesn't add unnecessary numbers to array for later ship collision checks.
+// Array of first column cells.
+// Used for ship collision checks.
 const firstColumnCells = arrayRange.map((x) => x * 10);
 
-// Same as above but for last column instead.
+// Same as above but array of last column cells.
 const lastColumnCells = firstColumnCells.map((x) => x + 9);
 
 class Gameboard {
@@ -36,8 +36,7 @@ class Gameboard {
 			this.checkWallCollisions(newShipCells, isHorizontal) &&
 			this.checkShipCollisions(newShipCells, isHorizontal)
 		) {
-			this._occupiedBoardCells =
-				this._occupiedBoardCells.concat(newShipCells);
+			this._occupiedBoardCells = this._occupiedBoardCells.concat(newShipCells);
 			const newShip = new Ship(shipSize, newShipCells);
 			this._shipList.push(newShip);
 			return true;
@@ -108,16 +107,20 @@ class Gameboard {
 		} else {
 			for (let i = 0; i < shipCells.length; i++) {
 				if (i === 0) {
-					checkCells.push(shipCells[i] - 11);
 					checkCells.push(shipCells[i] - 10);
-					checkCells.push(shipCells[i] - 9);
 				} else if (i === shipCells.length - 1) {
-					checkCells.push(shipCells[i] + 9);
 					checkCells.push(shipCells[i] + 10);
-					checkCells.push(shipCells[i] + 11);
 				}
-				checkCells.push(shipCells[i] - 1);
-				checkCells.push(shipCells[i] + 1);
+				if (!firstColumnCells.includes(shipCells[i])) {
+					checkCells.push(shipCells[i] + 9);
+					checkCells.push(shipCells[i] - 1);
+					checkCells.push(shipCells[i] - 11);
+				}
+				if (!lastColumnCells.includes(shipCells[i])) {
+					checkCells.push(shipCells[i] + 1);
+					checkCells.push(shipCells[i] + 11);
+					checkCells.push(shipCells[i] - 9);
+				}
 			}
 		}
 		let shipCollisions = undefined;
