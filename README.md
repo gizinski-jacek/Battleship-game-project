@@ -1,13 +1,15 @@
-# Battleship-game-project
+# Battleship game project
 
 Battleship game project build following The Odin Project curriculum on TDD using basics of unit testing with Jest.
 
 ## Table of contents
 
-- [Github & Live](#github--live)
-- [Features](#features)
-- [Status](#status)
-- [Contact](#contact)
+- [Battleship game project](#battleship-game-project)
+	- [Table of contents](#table-of-contents)
+- [Github \& Live](#github--live)
+	- [Features](#features)
+	- [Status](#status)
+	- [Contact](#contact)
 
 # Github & Live
 
